@@ -10,8 +10,10 @@ body {
 }
 
 #root {
-  min-width: 50%;
-  min-height: 80vh;
+  width: 66%;
+  min-width: 1000px;
+  height: 80vh;
+  min-height: 500px;
   margin: 0 auto;
   padding: 1rem;
   text-align: center;
@@ -29,7 +31,7 @@ body {
   text-shadow: 0 0 1rem rgba(255, 255, 255, 0.5);
   text-align: center;
   text-transform: uppercase;
-  color: #fff;
+  color: #ca8685;
   text-decoration: underline;
 }
 
@@ -37,33 +39,148 @@ form {
   .form-control, button {
     margin-top: 2rem;
   }
-  
-  .select-input {
-    width: '100%';
-    margin-bottom: '20px';
-    font-size: '16px';
-    font-family: 'Arial; sans-serif';
-    background-color: '#f0f0f0';
-    border-radius: '5px';
-    border: '1px solid #ccc';
-    padding: '10px';
-    box-shadow: '0 2px 4px rgba(0, 0, 0, 0.1)';
-    transition: 'all 0.3s ease-in-out';
+
+  .MuiFormControl-root.MuiPickersTextField-root.date {
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
   }
+  
+  .MuiInputBase-root {
+    border: .5px solid #1d1b1b;
+    padding: 8px 10px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    transition: 'all 0.3s ease-in-out';
+    border-radius: 4px;
 
-  button[type="submit"] {
-    background-color: #ae8f46;
-    color: white;
-    padding: 10px 20px;
-    font-weight: 200;
-    letter-spacing: 1px;
-    border: #fff .5px solid;
-
-    &:hover, &:focus, &:active {
-      background-color: #8b6a3c;
-      color: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      border: none;
+    &.Mui-disabled {
+      box-shadow: none;
     }
   }
+
+  .chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px 0;
+
+    .MuiChip-root {
+      &:nth-of-type(odd) {
+        background-color: #ca8685;
+      }
+      &:nth-of-type(even) {
+        background-color: #da9388;
+      }
+      color: #fff;
+      margin: 5px 5px;
+      box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+.submit-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    
+    button[type="submit"] {
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      backdrop-filter: saturate(10);
+      color: white;
+      padding: 10px 20px;
+      font-weight: 200;
+      letter-spacing: 1px;
+      border: #fff .5px solid;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+
+      &:hover, &:focus, &:active {
+        backdrop-filter: saturate(3);
+        color: #fff;
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+        border: none;
+      }
+      &:disabled {
+        background-color: transparent;
+        backdrop-filter: saturate(90%);
+        color: #666;
+        cursor: not-allowed;
+        box-shadow: none;
+
+        &:hover, &:focus, &:active {
+          border: #fff .5px solid;
+        }
+      }
+    }
+  }
+  .form-status {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #fff;
+    padding: .5rem;
+    border-radius: 2px;
+    min-width: 20rem;
+    text-align: center;
+    font-weight: 300;
+    text-shadow: 0 0 1rem rgba(255, 255, 255, 0.5);
+
+    &.success {
+      background-color: #6dbf73;
+    }
+    &.loading {
+      backdrop-filter: saturate(90%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #666666;
+    }
+    &.error {
+      background-color: #ff4d4d;
+    }
+  }
+}
+
+.totals {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  line-height: 1;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  
+  .MuiChip-root {
+    margin-right: 10px;
+    
+    &.info {
+      backdrop-filter: grayscale(50%);
+      border-radius: 5px;
+      font-weight: 900;
+    }
+    &.button {
+      background-color: transparent;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+      align-self: center;
+      border: #fff .5px solid;
+      cursor: pointer;
+      &:hover, &:focus, &:active {
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+      }
+    }
+  }
+}
+
+.MuiTable-root {
+  width: 100%;
+  margin-top: 10px;
+  // box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+  border: solid 1px rgba(255, 255, 255, 0.5);
+  background-color: #fff;
+  opacity: 0.5;
+  color: #000;
+  border-radius: 5px;
+  padding: 10px;
+  border-radius: 5px;
 }

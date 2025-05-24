@@ -11,7 +11,6 @@ const CPTs: any = [
   {"CPT Code": "99407", "Description": "Smoking cessation >10min", "wRVU": 0.50, "Compensation": 27.91, "Category": "Outpatient"},
   {"CPT Code": "99156", "Description": "Moderate sedation, 15min", "wRVU": 1.65, "Compensation": 92.10, "Category": "Procedures"},
   {"CPT Code": "99157", "Description": "Moderate sedation, each additional15min", "wRVU": 1.25, "Compensation": 69.78, "Category": "Procedures"},
-  // Missing MIST2, initial and MIST2, subsequent
   {"CPT Code": "99255", "Description": "Inpatient consult new, 80min", "wRVU": 3.86, "Compensation": 215.47, "Category": "Inpatient"},
   {"CPT Code": "99233", "Description": "Inpatient followup, >50min", "wRVU": 2.40, "Compensation": 133.97, "Category": "Inpatient"},
   {"CPT Code": "99291", "Description": "Critical care, up to 74 min", "wRVU": 4.50, "Compensation": 251.19, "Category": "ICU"},
