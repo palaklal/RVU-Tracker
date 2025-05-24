@@ -1,0 +1,69 @@
+body {
+  background-image: url("src/assets/pexels-karolina-grabowska-4226769.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #fff;
+  color: #fff;
+
+}
+
+#root {
+  min-width: 50%;
+  min-height: 80vh;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 1rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(50px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.title {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  font-weight: 150;
+  text-shadow: 0 0 1rem rgba(255, 255, 255, 0.5);
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: underline;
+}
+
+form {
+  .form-control, button {
+    margin-top: 2rem;
+  }
+  
+  .select-input {
+    width: '100%';
+    margin-bottom: '20px';
+    font-size: '16px';
+    font-family: 'Arial; sans-serif';
+    background-color: '#f0f0f0';
+    border-radius: '5px';
+    border: '1px solid #ccc';
+    padding: '10px';
+    box-shadow: '0 2px 4px rgba(0, 0, 0, 0.1)';
+    transition: 'all 0.3s ease-in-out';
+  }
+
+  button[type="submit"] {
+    background-color: #ae8f46;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    border: #fff .5px solid;
+
+    &:hover, &:focus, &:active {
+      background-color: #8b6a3c;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      border: none;
+    }
+  }
+}
