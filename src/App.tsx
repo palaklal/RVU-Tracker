@@ -29,12 +29,13 @@ function App() {
   }
 
 /*
-Upon initial load, the should either load the local CSV file or create a new one if it doesn't exist
-This add form should update/save to the CSV file
-Add more analytics, sorting, filtering on table
+TODO: move Form and Table to different components (and Tables to its own box)
+TODO: Upon initial load (with loading icon), the should either load the local CSV file or create a new one if it doesn't exist
+TODO: This add form should update/save to the CSV file
+TODO: Add more analytics, sorting, filtering, delete functionality, color labels for categories to table
 ?Add menu on side of website to Add CPT codes (this), summarize, display CSV in table (including import and export). Each page will have a different background image.
 */
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => { // TODO: this doesn't need to do the CSV export, just add the RVUs to the CSVObjects and move CSVContent code to Import/Export button functionality
     e.preventDefault();
     if (!date || !selectedCPTs) return;
     setFormStatus({text: (`Adding ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `...`), type: 'loading'});
@@ -134,7 +135,7 @@ Add more analytics, sorting, filtering on table
                 <Chip className="button" icon={<FileDownloadIcon />} label="Import" variant="outlined" />
                 <Chip className="button" icon={<FileUploadIcon />} label="Export" variant="outlined" />
               </span>
-              <span><Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc, cpt) => acc + (cpt.Compensation * cpt.wRVU), 0).toFixed(2)} variant="outlined" /></span>
+              <span><Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc, cpt) => acc + cpt.Compensation, 0).toFixed(2)} variant="outlined" /></span>
             </div>
           <Table stickyHeader={true} className="cpt-table">
             <thead>
