@@ -16,9 +16,9 @@ const AddForm = ({setCSVData, setCSVObjects}) => {
     const addSelectedCPTs = (cpt: any) => {
         if (!cpt) return
         else {
-        cpt = JSON.parse(cpt)
-        cpt.Date = date ? date.format('YYYY-MM-DD') : null
-        cpt.id = Math.random();
+            cpt = JSON.parse(cpt)
+            cpt.Date = date ? date.format('YYYY-MM-DD') : null
+            cpt.id = Math.random();
         if (selectedCPTs.length === 0) setSelectedCPTs([cpt]) 
         else setSelectedCPTs(prev => [...prev, cpt])
         }
@@ -29,44 +29,36 @@ const AddForm = ({setCSVData, setCSVObjects}) => {
         if (!date || !selectedCPTs) return;
         setFormStatus({text: (`Adding ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `...`), type: 'loading'});
         try {
-        let rows: any[] = [];
-        selectedCPTs.forEach((cpt: any) => {
-            // Prepare CSV row: ID, Date, CPT Code, Description, wRVU, Compensation, Category
-            const row = [
-            cpt.id,
-            date.format('YYYY-MM-DD'),
-            cpt['CPT Code'],
-            cpt.Description,
-            cpt.wRVU,
-            cpt.Compensation,
-            cpt.Category
-            ];
-            rows.push(row);
-        });
-        const csvContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category\n`
-            + rows.map(row => row.join(',')).join('\n');
-        console.log(csvContent);
+            let rows: any[] = [];
+            selectedCPTs.forEach((cpt: any) => {
+                // Prepare CSV row: ID, Date, CPT Code, Description, wRVU, Compensation, Category
+                const row = [
+                cpt.id,
+                date.format('YYYY-MM-DD'),
+                cpt['CPT Code'],
+                cpt.Description,
+                cpt.wRVU,
+                cpt.Compensation,
+                cpt.Category
+                ];
+                rows.push(row);
+            });
+            const csvContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category\n`
+                + rows.map(row => row.join(',')).join('\n');
 
-        setCSVData(csvContent);
-        setCSVObjects(selectedCPTs)
+            setCSVData(csvContent);
+            setCSVObjects(selectedCPTs)
 
-        // const blob = new Blob([csvContent], { type: 'text/csv' });
-        // const url = URL.createObjectURL(blob);
-        // const a = document.createElement('a');
-        // a.href = url;
-        // a.download = 'rvu-data.csv';
-        // a.click();
-        // URL.revokeObjectURL(url);
-
-        setFormStatus({text: (`Added ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `! Resetting form...`), type: 'success'});
-        setTimeout(() => {
-            setFormStatus('')
-            setSelectedCPTs([]);
-            setDate(null);
-        }, 5000);
+            setFormStatus({text: (`Added ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `! Resetting form...`), type: 'success'});
+            setTimeout(() => {
+                // Reset form state
+                setFormStatus('')
+                setSelectedCPTs([]);
+                setDate(null);
+            }, 5000);
         } catch (error) {
-        console.error("Error adding RVUs", error);
-        setFormStatus({text: 'Error adding RVUs. Please try again.', type: 'error'});
+            console.error("Error adding RVUs", error);
+            setFormStatus({text: 'Error adding RVUs. Please try again.', type: 'error'});
         }
     };
 

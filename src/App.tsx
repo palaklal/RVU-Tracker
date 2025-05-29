@@ -18,7 +18,6 @@ TODO: Add more analytics, sorting, filtering, delete functionality, color labels
 
   return (
     <>
-      {}
       <h1 className="title">RVU Tracker</h1>
       <AddForm setCSVData={setCSVData} setCSVObjects={setCSVObjects}></AddForm>
         {CSVData && <RSVTable CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects}></RSVTable>}
