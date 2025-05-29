@@ -7,8 +7,9 @@ import AddIcon from '@mui/icons-material/Add';
 import { Dayjs } from 'dayjs';
 import CPTs from '../data/CPTs';
 import '../App.scss';              
+import { sortObjectsByDate, sortRowsByDate } from '../helper-functions/sort.ts';
 
-const AddForm = ({setCSVData, setCSVObjects}) => {
+const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
     const [date, setDate] = useState<Dayjs | null>(null);
     const [selectedCPTs, setSelectedCPTs] = useState<any[]>([]);
     const [formStatus, setFormStatus] = useState<any>({text: '', type: ''});
@@ -24,7 +25,7 @@ const AddForm = ({setCSVData, setCSVObjects}) => {
         }
     }
 
-    const handleSubmit = (e: React.FormEvent) => { // TODO: this doesn't need to do the CSV export, just add the RVUs to the CSVObjects and move CSVContent code to Import/Export button functionality
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!date || !selectedCPTs) return;
         setFormStatus({text: (`Adding ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `...`), type: 'loading'});
@@ -33,21 +34,43 @@ const AddForm = ({setCSVData, setCSVObjects}) => {
             selectedCPTs.forEach((cpt: any) => {
                 // Prepare CSV row: ID, Date, CPT Code, Description, wRVU, Compensation, Category
                 const row = [
-                cpt.id,
-                date.format('YYYY-MM-DD'),
-                cpt['CPT Code'],
-                cpt.Description,
-                cpt.wRVU,
-                cpt.Compensation,
-                cpt.Category
+                    cpt.id,
+                    date.format('YYYY-MM-DD'),
+                    cpt['CPT Code'],
+                    cpt.Description,
+                    cpt.wRVU,
+                    cpt.Compensation,
+                    cpt.Category
                 ];
                 rows.push(row);
             });
-            const csvContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category\n`
+            let CSVContent
+            if (CSVData && CSVData.length > 0) {
+                // Combine existing CSV data and new rows, then sort by date ascending
+                const existingRows = CSVData
+                    .split('\n')
+                    .filter(Boolean) // Remove empty lines
+                    .slice(1) // skip header
+                    .map((line: string) => line.split(','));
+                let allRows = [...existingRows, ...rows];
+                allRows = sortRowsByDate(allRows);
+                CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category\n` + allRows.map(row => row.join(',')).join('\n');
+                console.log("CSVContent", CSVContent)
+            } else {
+                // If no existing data, just use the new rows
+                CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category\n`
                 + rows.map(row => row.join(',')).join('\n');
-
-            setCSVData(csvContent);
-            setCSVObjects(selectedCPTs)
+            }
+            
+            setCSVData(CSVContent);
+            if (CSVObjects && CSVObjects.length > 0) {
+                let newCSVObjects = [...CSVObjects, ...selectedCPTs];
+                newCSVObjects = sortObjectsByDate(newCSVObjects);
+                setCSVObjects(newCSVObjects);
+                console.log("New CSVObjects", newCSVObjects);  
+            }
+            else setCSVObjects(selectedCPTs)
+            // TODO: Save to RSV file
 
             setFormStatus({text: (`Added ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `! Resetting form...`), type: 'success'});
             setTimeout(() => {
@@ -78,31 +101,25 @@ const AddForm = ({setCSVData, setCSVObjects}) => {
                 </LocalizationProvider>        
             </FormControl>
             <FormControl className="form-control" fullWidth disabled={!date}>
-            <InputLabel variant="standard" htmlFor="RVU" shrink={true}> RVU </InputLabel>
-            <NativeSelect
-                value=""
-                onChange={e => addSelectedCPTs(e.target.value)}
-                inputProps={{
-                name: 'RVU',
-                id: 'RVU',
-                }}>
-                <option value=""></option>
-                {CPTs.map((cpt: any) => (
-                <option key={cpt["CPT Code"]} value={JSON.stringify(cpt)}>
-                    {cpt["CPT Code"]} - {cpt.Description}
-                </option>
-                ))}
-            </NativeSelect>
+                <InputLabel variant="standard" htmlFor="RVU" shrink={true}> RVU </InputLabel>
+                <NativeSelect value="" onChange={e => addSelectedCPTs(e.target.value)} inputProps={{ name: 'RVU', id: 'RVU', }}>
+                    <option value=""></option>
+                    {CPTs.map((cpt: any) => (
+                        <option key={cpt["CPT Code"]} value={JSON.stringify(cpt)}>
+                            {cpt["CPT Code"]} - {cpt.Description}
+                        </option>
+                    ))}
+                </NativeSelect>
             </FormControl>
             <div className="chips-container">
-            {selectedCPTs.map((cpt: any) => (
-                <Chip key={cpt.id} label={getCPTChip(cpt)} onDelete={() => removeCPTCode(cpt.id)} />
-            ))}
+                {selectedCPTs.map((cpt: any) => (
+                    <Chip key={cpt.id} label={getCPTChip(cpt)} onDelete={() => removeCPTCode(cpt.id)} />
+                ))}
             </div>
             <div className="submit-container">
                 <button type="submit" disabled={!date || selectedCPTs.length === 0 || (formStatus.type === 'loading' || formStatus.type === 'success')}>
                 <AddIcon style={{ marginRight: 4 }} />
-                Add RVUs
+                    Add RVUs
                 </button>
             {formStatus.type && <div className={formStatus.type + " form-status"}>{formStatus.text}</div>}
             </div>
