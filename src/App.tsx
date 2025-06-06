@@ -14,6 +14,7 @@ TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: This add form should update/save to the CSV file
 TODO: Add more analytics, sorting, filtering, delete functionality, color labels for categories to table
 TODO: Remove RVU-tracker.csv from git repo so I don't accidentally overwrite a user's data
+TODO: Add way to search/type CPT code in dropdown, ability to add multiple CPTs at the same time, filtering by date, monthly summaries
 ?Add menu on side of website to Add CPT codes (this), summarize, display CSV in table (including import and export). Each page will have a different background image.
 */
   

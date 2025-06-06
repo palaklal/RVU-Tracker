@@ -1,5 +1,9 @@
+$main-color: #003d45;
+$secondary-color: #006064;
+$accent-color: #00bcd4;
+
 body {
-  background-image: url("src/assets/pexels-karolina-grabowska-4226769.jpg");
+  background-image: url("src/assets/pexels-pixabay-40568.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -13,12 +17,12 @@ body {
   width: 66%;
   min-width: 1000px;
   min-height: 80vh;
-  margin: 0 auto;
+  margin: 2.5rem auto;
   padding: 1rem;
   text-align: center;
   border-radius: 1rem;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(50px);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 1);
+  backdrop-filter: blur(40px);
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
@@ -30,7 +34,7 @@ body {
   text-shadow: 0 0 1rem rgba(255, 255, 255, 0.5);
   text-align: center;
   text-transform: uppercase;
-  color: #ca8685;
+  color: $main-color;
   text-decoration: underline;
 }
 
@@ -63,10 +67,10 @@ form {
 
     .MuiChip-root {
       &:nth-of-type(odd) {
-        background-color: #ca8685;
+        background-color: $main-color;
       }
       &:nth-of-type(even) {
-        background-color: #da9388;
+        background-color: $secondary-color;
       }
       color: #fff;
       margin: 5px 5px;
@@ -84,7 +88,7 @@ form {
     button[type="submit"] {
       display: flex;
       align-items: center;
-      background-color: transparent;
+      background-color: #536584;
       backdrop-filter: saturate(10);
       color: white;
       padding: 10px 20px;
