@@ -9,7 +9,7 @@ import CPTs from '../data/CPTs';
 import '../App.scss';              
 import { sortObjectsByDate, sortRowsByDate } from '../helper-functions/sort.ts';
 
-const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
+const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) => { // TODO: remove setCSVObjects (and maybe setCSVData) once updateCSV is implemented
     const [date, setDate] = useState<Dayjs | null>(null);
     const [selectedCPTs, setSelectedCPTs] = useState<any[]>([]);
     const [formStatus, setFormStatus] = useState<any>({text: '', type: ''});
@@ -66,11 +66,10 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
             if (CSVObjects && CSVObjects.length > 0) {
                 let newCSVObjects = [...CSVObjects, ...selectedCPTs];
                 newCSVObjects = sortObjectsByDate(newCSVObjects);
-                setCSVObjects(newCSVObjects);
+                updateCSV(newCSVObjects);
                 console.log("New CSVObjects", newCSVObjects);  
             }
-            else setCSVObjects(selectedCPTs)
-            // TODO: Save to RSV file
+            else updateCSV(selectedCPTs)
 
             setFormStatus({text: (`Added ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `! Resetting form...`), type: 'success'});
             setTimeout(() => {

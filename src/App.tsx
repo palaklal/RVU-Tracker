@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.scss'
 import AddForm from './components/add-form.tsx'
 import RSVTable from './components/rsv-table.tsx'
+import Spinner from './components/spinner.tsx'
 import { sortRowsByDate } from './helper-functions/sort.ts'
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
   const [CSVObjects, setCSVObjects] = useState<any[]>([]);
 
 /*
-TODO: Upon initial load (with loading icon), if there is no local CSV file create a new one
+TODO: Upon initial load, if there is no local CSV file create a new one
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: This add form should update/save to the CSV file
 TODO: Add more analytics, sorting, filtering, delete functionality, color labels for categories to table
@@ -59,10 +60,17 @@ TODO: Add way to search/type CPT code in dropdown, ability to add multiple CPTs 
     }
   }
 
+  const updateCSV = (newCSV: any[]) => {
+    console.log("Updating CSV with new data:", newCSV);
+    setCSVObjects(newCSV);
+    // TODO: update/save to local CSV file (and maybe move logic to setCSVData here)
+  }
+
   return (
     <>
       <h1 className="title">RVU Tracker</h1>
-      <AddForm CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects}></AddForm>
+      <AddForm CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} updateCSV={updateCSV}></AddForm>
+        {!CSVData && <Spinner />}
         {CSVData && <RSVTable CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects}></RSVTable>}
     </>
   )
