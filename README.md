@@ -6,7 +6,7 @@ Currently supports:
 <ul>
     <li>Importing a table of RVUs from a local spreadsheet file</li>
     <li>Adding multiple RVUs simultaneously by date using the Form's (currently) prepopulated dropdown of RVUs</li>
-    <li>Importing and exporting from the RVU table</li>
+    <li>Importing, exporting, and removing from the RVU table</li>
 </ul>
 
-![RVU Tracker](./src/assets/screenshots/Screenshot%202.png)
+![RVU Tracker](./src/assets/screenshots/Screenshot%203.png)
