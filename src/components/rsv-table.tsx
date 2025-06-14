@@ -1,6 +1,15 @@
 import { Chip, Table } from "@mui/material";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import { useState } from 'react'
+
 import '../App.scss'
 
 
@@ -61,6 +70,40 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
       }
     }
 
+    const [removeModal, setRemoveModal] = useState(false);
+    const [currentRVU, setCurrentRVU] = useState(null);
+    const handleOpenRemoveModal = (cpt: any) => () => {
+      console.log("Opening remove modal for RVU:", cpt);
+      setCurrentRVU(cpt);
+      setRemoveModal(true);
+    };
+
+    const handleClose = (continueRemove: boolean) => () => {
+      if (!continueRemove) {
+        setCurrentRVU(null)
+        setRemoveModal(false)
+      } else {
+        removeRVU(currentRVU)
+      }
+    };
+
+    const removeRVU = (RVU: any) => {
+      // TODO: remove RVU from local CSV file
+
+
+      console.log("Removing RVU:", RVU);
+      const updatedCSVObjects = CSVObjects.filter(cpt => cpt.id !== RVU.id);
+      setCSVObjects(updatedCSVObjects);
+      const updatedCSVData = CSVData
+        .split('\n')
+        .filter(row => !row.startsWith(RVU.id)) // Remove the row with the matching ID
+        .join('\n');
+      setCSVData(updatedCSVData);
+      setRemoveModal(false);
+      console.log("RVU removed. Updated CSVObjects:", updatedCSVObjects);
+      setCurrentRVU(null)
+    }
+
     if (!CSVData || !CSVObjects || CSVObjects.length === 0) {
         return <div className="empty-table">No RVUs to display. Please import or add data.</div>;
     }
@@ -84,6 +127,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                 <th>wRVU</th>
                 <th>Compensation</th>
                 <th>Category</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -95,10 +139,50 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                   <td>{cpt.wRVU.toFixed(2)}</td>
                   <td>${cpt.Compensation.toFixed(2)}</td>
                   <td>{cpt.Category}</td>
+                  <td className="d-flex"><RemoveCircleIcon id="remove-icon" onClick={handleOpenRemoveModal(cpt)} /></td>
                 </tr>
               ))}
             </tbody>
           </Table>
+          { currentRVU && 
+            <Dialog
+              open={removeModal}
+              onClose={handleClose(false)}
+              aria-labelledby="alert-remove-RVU"
+              aria-describedby="alert-remove-RVU-row"
+              maxWidth="xl"
+              className="dialog"
+            >
+              <DialogContent className="remove-dialog">
+                <DialogContentText id="alert-remove-RVU-row">
+                  Are you sure you want to remove this RVU?
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>CPT Code</th>
+                        <th>Description</th>
+                        <th>wRVU</th>
+                        <th>Compensation</th>
+                        <th>Category</th>
+                      </tr>
+                    </thead>
+                    <tbody><tr>
+                      <td>{currentRVU.Date}</td>
+                      <td>{currentRVU["CPT Code"]}</td>
+                      <td>{currentRVU.Description}</td>
+                      <td>{currentRVU.wRVU.toFixed(2)}</td>
+                      <td>${currentRVU.Compensation.toFixed(2)}</td>
+                      <td>{currentRVU.Category}</td>
+                  </tr></tbody></table>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions className="remove-dialog">
+                <Button onClick={handleClose(false)}>No</Button>
+                <Button onClick={handleClose(true)} autoFocus> Yes </Button>
+              </DialogActions>
+            </Dialog> 
+          }
         </div>
     )
 }
