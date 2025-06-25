@@ -12,7 +12,7 @@ function App() {
 /*
 TODO: Upon initial load, if there is no local CSV file create a new one
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
-TODO: This add form should update/save to the CSV file
+TODO: This add form should update/save to the CSV file (add Save button to form)
 TODO: Add more analytics, sorting, filtering, color labels for categories to table
 TODO: Remove RVU-tracker.csv from git repo so I don't accidentally overwrite a user's data
 TODO: Add way to search/type CPT code in dropdown, ability to add multiple CPTs at the same time, filtering by date, monthly summaries
@@ -31,13 +31,13 @@ TODO: Add way to search/type CPT code in dropdown, ability to add multiple CPTs 
       const response = await fetch('/src/data/RVU-tracker.csv');
       if (!response.ok) {
         // If file doesn't exist, create a new one with headers
-        // const initialCSV = 'id,Date,CPT Code,Description,wRVU,Compensation,Category\n';
+        // const initialCSV = 'id,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n';
         // setCSVData(initialCSV);
         // setCSVObjects([]);
       } else {
         let localCSV: any = await response.text()
         localCSV = sortRowsByDate(localCSV.split('\n').slice(1).filter(Boolean).map((row: string) => row.split(',')));
-        localCSV = `ID,Date,CPT Code,Description,wRVU,Compensation,Category\n` + localCSV.map((row: any) => row.join(',')).join('\n');
+        localCSV = `ID,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n` + localCSV.map((row: any) => row.join(',')).join('\n');
         console.log('Local CSV loaded:', localCSV);
         setCSVData(localCSV);
         const csvRows = localCSV.split('\n').filter(Boolean).map((row: string) => row.split(','));
@@ -49,7 +49,8 @@ TODO: Add way to search/type CPT code in dropdown, ability to add multiple CPTs 
             Description: row[3],
             wRVU: parseFloat(row[4]),
             Compensation: parseFloat(row[5]),
-            Category: row[6]
+            Category: row[6],
+            Quantity: parseInt(row[7]) || 1 // Default to 1 if Quantity is not provided
           };
         });
         setCSVObjects(csvObjects);

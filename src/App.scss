@@ -218,6 +218,33 @@ td {
   text-align: center;
   font-weight: 300;
 }
+input[type="number"] {
+  width: 50px;
+  background-color: transparent;
+  border: none;
+  color: #000;
+
+  // change up and down arrows to white
+  &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    color: #fff;
+  }
+  &::-webkit-input-placeholder {
+    color: #fff;
+  }
+  &:-ms-input-placeholder {
+    color: #fff;
+  }
+  &::placeholder {
+    color: #fff;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: #f0f0f0;
+  }
+}
 
 #remove-icon {
   color: $red;

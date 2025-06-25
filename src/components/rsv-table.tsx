@@ -1,13 +1,14 @@
 import { Chip, Table } from "@mui/material";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+
 import { useState } from 'react'
 
 import '../App.scss'
@@ -60,7 +61,8 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                     Description: row[3],
                     wRVU: parseFloat(row[4]),
                     Compensation: parseFloat(row[5]),
-                    Category: row[6]
+                    Category: row[6],
+                    Quantity: parseInt(row[7]) || 1 // Default to 1 if Quantity is not provided
                 }));
                 setCSVObjects(objects);
                 console.log("CSV objects loaded:", objects);
@@ -68,6 +70,27 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
           };
           reader.readAsText(file)
       }
+    }
+
+    const updateQuantity = (id: string, value: string) => {
+      const newQuantity = parseInt(value);
+      if (isNaN(newQuantity) || newQuantity < 0) return; // Ignore invalid input
+      const updatedCSVObjects = CSVObjects.map(cpt => 
+        cpt.id === id ? { ...cpt, Quantity: newQuantity } : cpt
+      );
+      setCSVObjects(updatedCSVObjects)
+      const updatedCSVData = CSVData
+        .split('\n')
+        .map(row => {
+          const columns = row.split(',');
+          if (columns[0] === id) {
+            columns[7] = newQuantity.toString(); // Update Quantity column
+          }
+          return columns.join(',');
+        })
+        .join('\n');
+      setCSVData(updatedCSVData);
+      console.log("Updated quantity for RVU with ID:", id, "to", newQuantity);
     }
 
     const [removeModal, setRemoveModal] = useState(false);
@@ -127,18 +150,20 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                 <th>wRVU</th>
                 <th>Compensation</th>
                 <th>Category</th>
+                <th>Quantity</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               {CSVObjects.map((cpt: any) => (
                 <tr key={cpt.id}>
-                  <td>{cpt.Date}</td>
+                  <td >{cpt.Date}</td> 
                   <td>{cpt["CPT Code"]}</td>
                   <td>{cpt.Description}</td>
                   <td>{cpt.wRVU.toFixed(2)}</td>
                   <td>${cpt.Compensation.toFixed(2)}</td>
                   <td>{cpt.Category}</td>
+                  <td><input type="number" min="1" value={cpt.Quantity} onChange={(e) => updateQuantity(cpt.id, e.target.value)} /></td>
                   <td className="d-flex"><RemoveCircleIcon id="remove-icon" onClick={handleOpenRemoveModal(cpt)} /></td>
                 </tr>
               ))}
@@ -165,6 +190,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                         <th>wRVU</th>
                         <th>Compensation</th>
                         <th>Category</th>
+                        <th>Quantity</th>
                       </tr>
                     </thead>
                     <tbody><tr>
@@ -174,6 +200,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                       <td>{currentRVU.wRVU.toFixed(2)}</td>
                       <td>${currentRVU.Compensation.toFixed(2)}</td>
                       <td>{currentRVU.Category}</td>
+                      <td>{currentRVU.Quantity}</td>
                   </tr></tbody></table>
                 </DialogContentText>
               </DialogContent>

@@ -20,6 +20,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
             cpt = JSON.parse(cpt)
             cpt.Date = date ? date.format('YYYY-MM-DD') : null
             cpt.id = Math.random();
+            cpt.Quantity = 1; // Default to 1 if Quantity is not provided
         if (selectedCPTs.length === 0) setSelectedCPTs([cpt]) 
         else setSelectedCPTs(prev => [...prev, cpt])
         }
@@ -32,7 +33,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
         try {
             let rows: any[] = [];
             selectedCPTs.forEach((cpt: any) => {
-                // Prepare CSV row: ID, Date, CPT Code, Description, wRVU, Compensation, Category
+                // Prepare CSV row: ID, Date, CPT Code, Description, wRVU, Compensation, Category, Quantity
                 const row = [
                     cpt.id,
                     date.format('YYYY-MM-DD'),
@@ -40,7 +41,8 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
                     cpt.Description,
                     cpt.wRVU,
                     cpt.Compensation,
-                    cpt.Category
+                    cpt.Category,
+                    (cpt.Quantity || 1) // Default to 1 if Quantity is not provided
                 ];
                 rows.push(row);
             });
@@ -54,11 +56,11 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
                     .map((line: string) => line.split(','));
                 let allRows = [...existingRows, ...rows];
                 allRows = sortRowsByDate(allRows);
-                CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category\n` + allRows.map(row => row.join(',')).join('\n');
+                CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Categor,Quantityy\n` + allRows.map(row => row.join(',')).join('\n');
                 console.log("CSVContent", CSVContent)
             } else {
                 // If no existing data, just use the new rows
-                CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category\n`
+                CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n`
                 + rows.map(row => row.join(',')).join('\n');
             }
             

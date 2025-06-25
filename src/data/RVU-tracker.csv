@@ -1,5 +1,4 @@
-ID,Date,CPT Code,Description,wRVU,Compensation,Category
-0.7303946018774066,2025-05-23,99406,Smoking cessation <10min,0.24,13.4,Outpatient
-0.12356162493566769,2025-05-24,99255,Inpatient consult new,3.86,215.47,Inpatient
-0.38986783033228956,2025-05-23,99255,Inpatient consult new,3.86,215.47,Inpatient
-0.38986783033228957,2025-05-23,99407,Smoking cessation >10min,0.50,27.91,Outpatient
+ID,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity
+0.7303946018774066,2025-05-23,99406,Smoking cessation <10min,0.24,13.4,Outpatient,1
+0.38986783033228956,2025-05-23,99255,Inpatient consult new,3.86,215.47,Inpatient,2
+0.38986783033228957,2025-05-23,99407,Smoking cessation >10min,0.50,27.91,Outpatient,1
