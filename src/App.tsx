@@ -11,7 +11,7 @@ function App() {
 
 /*
 TODO: Replace RVU Chips in Add Form with a custom chip that includes number input for Quantity
-TODO: Upon initial load, if there is no local CSV file create a new one
+TODO: Need to revisit how to store and handle user's data because you cannot write to a local file in the browser.
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: This add form should update/save to the CSV file (add Save button to form)
 TODO: Add more analytics, sorting, filtering, color labels for categories to table
@@ -29,14 +29,14 @@ TODO: Add way to search/type CPT code in dropdown, filtering by date, monthly su
   const loadLocalCSV = async () => {
     try {
       console.log('Loading local CSV...');
-      const response = await fetch('/src/data/RVU-tracker.csv');
-      if (!response.ok) {
+      const response = await fetch('/src/data/RVU-tracker.csv')
+      let localCSV = await response.text();
+      if (localCSV.includes('<script')) {
         // If file doesn't exist, create a new one with headers
-        // const initialCSV = 'id,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n';
-        // setCSVData(initialCSV);
-        // setCSVObjects([]);
+        const initialCSV = 'id,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n';
+        setCSVData(initialCSV);
+        setCSVObjects([]);
       } else {
-        let localCSV: any = await response.text()
         localCSV = sortRowsByDate(localCSV.split('\n').slice(1).filter(Boolean).map((row: string) => row.split(',')));
         localCSV = `ID,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n` + localCSV.map((row: any) => row.join(',')).join('\n');
         console.log('Local CSV loaded:', localCSV);
