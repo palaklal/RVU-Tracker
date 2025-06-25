@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# User-specific files
+/src/data/RVU-tracker.csv
