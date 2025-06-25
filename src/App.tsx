@@ -10,12 +10,13 @@ function App() {
   const [CSVObjects, setCSVObjects] = useState<any[]>([]);
 
 /*
+TODO: Replace RVU Chips in Add Form with a custom chip that includes number input for Quantity
 TODO: Upon initial load, if there is no local CSV file create a new one
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: This add form should update/save to the CSV file (add Save button to form)
 TODO: Add more analytics, sorting, filtering, color labels for categories to table
 TODO: Remove RVU-tracker.csv from git repo so I don't accidentally overwrite a user's data
-TODO: Add way to search/type CPT code in dropdown, ability to add multiple CPTs at the same time, filtering by date, monthly summaries
+TODO: Add way to search/type CPT code in dropdown, filtering by date, monthly summaries
 ?Add menu on side of website to Add CPT codes (this), summarize, display CSV in table (including import and export). Each page will have a different background image.
 */
   

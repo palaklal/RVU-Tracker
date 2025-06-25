@@ -139,7 +139,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                 <Chip className="button" icon={<FileDownloadIcon />} label="Import" variant="outlined" onClick={clickImport} />
                 <Chip className="button" icon={<FileUploadIcon />} label="Export" variant="outlined" onClick={exportCSV} />
               </span>
-              <span><Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc, cpt) => acc + cpt.Compensation, 0).toFixed(2)} variant="outlined" /></span>
+              <span><Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc: number, cpt: any) => acc + cpt.Compensation * (cpt.Quantity || 1), 0).toFixed(2)} variant="outlined" /></span>
             </div>
           <Table stickyHeader={true} className="cpt-table">
             <thead>
