@@ -13,7 +13,6 @@ import { useState } from 'react'
 
 import '../App.scss'
 
-
 const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
     const exportCSV = () => {
       const blob = new Blob([CSVData], { type: 'text/csv' });
@@ -127,6 +126,68 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
       setCurrentRVU(null)
     }
 
+    const sort = (column: string, ascending: boolean) => () => {
+      const sortedObjects = [...CSVObjects].sort((a, b) => {
+        let valA = a[column];
+        let valB = b[column];
+
+        // Handle Date column
+        if (column === "Date") {
+          const dateA = new Date(valA);
+          const dateB = new Date(valB);
+          return ascending ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+        }
+
+        // Handle numeric columns
+        if (["wRVU", "Compensation", "Quantity"].includes(column)) {
+          const numA = parseFloat(valA);
+          const numB = parseFloat(valB);
+          return ascending ? numA - numB : numB - numA;
+        }
+
+        // Handle string columns (CPT Code, Description, Category, etc.)
+        if (typeof valA === "string" && typeof valB === "string") {
+          return ascending ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        }
+
+        // Fallback
+        return 0;
+      });
+      setCSVObjects(sortedObjects);
+      const header = CSVData.split('\n')[0];
+      const sortedCSVData = [header, ...sortedObjects.map(cpt => (
+        `${cpt.id},${cpt.Date},${cpt["CPT Code"]},${cpt.Description},${cpt.wRVU},${cpt.Compensation},${cpt.Category},${cpt.Quantity}`
+      ))].join('\n');
+      setCSVData(sortedCSVData);
+      console.log(`Sorted by ${column} in ${ascending ? 'ascending' : 'descending'} order.`);
+    }
+
+    const filter = (e: any) => {
+      const search = e.target.value.toLowerCase();
+      const filtered = CSVObjects.filter((cpt: any) =>
+        Object.values(cpt).some(val =>
+          String(val).toLowerCase().includes(search)
+        )
+      );
+      if (search) {
+        setCSVObjects(filtered);
+      } else {
+        // Reset to all data by re-parsing CSVData
+        const rows = CSVData.split('\n').slice(1).map(row => row.split(','));
+        const objects = rows.map((row) => ({
+          id: row[0],
+          Date: row[1],
+          "CPT Code": row[2],
+          Description: row[3],
+          wRVU: parseFloat(row[4]),
+          Compensation: parseFloat(row[5]),
+          Category: row[6],
+          Quantity: parseInt(row[7]) || 1
+        }));
+        setCSVObjects(objects);
+      }
+    }
+
     if (!CSVData || !CSVObjects || CSVObjects.length === 0) {
         return <div className="empty-table">No RVUs to display. Please import or add data.</div>;
     }
@@ -144,13 +205,78 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
           <Table stickyHeader={true} className="cpt-table">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>CPT Code</th>
-                <th>Description</th>
-                <th>wRVU</th>
-                <th>Compensation</th>
-                <th>Category</th>
-                <th>Quantity</th>
+                <th colSpan={7}>
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="search-input"
+                    onChange={filter}
+                  />
+                </th>
+              </tr>
+              <tr>
+                <th>
+                  <span className="th-container">
+                    Date
+                    <span className="sort-icons">
+                      <span className="karet" title="Sort Ascending" onClick={sort("Date", true)}>▲</span>
+                      <span className="karet" title="Sort Descending" onClick={sort("Date", true)}>▼</span>
+                    </span></span>
+                </th>
+                <th>
+                  <span className="th-container">
+                  CPT Code
+                  <span className="sort-icons">
+                    <span className="karet" title="Sort Ascending" onClick={sort("CPT Code", true)}>▲</span>
+                    <span className="karet" title="Sort Descending" onClick={sort("CPT Code", false)}>▼</span>
+                  </span>
+                  </span>
+                </th>
+                <th>
+                  <span className="th-container">
+                  Description
+                  <span className="sort-icons">
+                    <span className="karet" title="Sort Ascending" onClick={sort("Description", true)}>▲</span>
+                    <span className="karet" title="Sort Descending" onClick={sort("Description", false)}>▼</span>
+                  </span>
+                  </span>
+                </th>
+                <th>
+                  <span className="th-container">
+                  wRVU
+                  <span className="sort-icons">
+                    <span className="karet" title="Sort Ascending" onClick={sort("wRVU", true)}>▲</span>
+                    <span className="karet" title="Sort Descending" onClick={sort("wRVU", false)}>▼</span>
+                  </span>
+                  </span>
+                </th>
+                <th>
+                  <span className="th-container">
+                  Compensation
+                  <span className="sort-icons">
+                    <span className="karet" title="Sort Ascending" onClick={sort("Compensation", true)}>▲</span>
+                    <span className="karet" title="Sort Descending" onClick={sort("Compensation", false)}>▼</span>
+                  </span>
+                  </span>
+                </th>
+                <th>
+                  <span className="th-container">
+                  Category
+                  <span className="sort-icons">
+                    <span className="karet" title="Sort Ascending" onClick={sort("Category", true)}>▲</span>
+                    <span className="karet" title="Sort Descending" onClick={sort("Category", false)}>▼</span>
+                  </span>
+                  </span>
+                </th>
+                <th>
+                  <span className="th-container">
+                  Quantity
+                  <span className="sort-icons">
+                    <span className="karet" title="Sort Ascending" onClick={sort("Quantity", true)}>▲</span>
+                    <span className="karet" title="Sort Descending" onClick={sort("Quantity", false)}>▼</span>
+                  </span>
+                  </span>
+                </th>
                 <th></th>
               </tr>
             </thead>

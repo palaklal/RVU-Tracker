@@ -14,9 +14,9 @@ TODO: Replace RVU Chips in Add Form with a custom chip that includes number inpu
 TODO: Need to revisit how to store and handle user's data because you cannot write to a local file in the browser.
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: This add form should update/save to the CSV file (add Save button to form)
-TODO: Add more analytics, sorting, filtering, color labels for categories to table
-TODO: Remove RVU-tracker.csv from git repo so I don't accidentally overwrite a user's data
-TODO: Add way to search/type CPT code in dropdown, filtering by date, monthly summaries
+TODO: Add more analytics, color labels for categories to table
+TODO: ADD FILTER ICON and toggle
+TODO: Add way to search/type CPT code in dropdown (replace with Autocomplete), filtering by date, monthly summaries
 ?Add menu on side of website to Add CPT codes (this), summarize, display CSV in table (including import and export). Each page will have a different background image.
 */
   
