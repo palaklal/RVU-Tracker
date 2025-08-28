@@ -9,4 +9,4 @@ Currently supports:
     <li>Importing, exporting, and removing from the RVU table</li>
 </ul>
 
-![RVU Tracker](./src/assets/screenshots/Screenshot%203.png)
+![RVU Tracker](./src/assets/screenshots/Screenshot%204.png)

@@ -84,16 +84,76 @@ form {
     justify-content: center;
     margin: 10px 0;
 
-    .MuiChip-root {
-      &:nth-of-type(odd) {
+    .custom-chip { // based on Material MUI Chip .MuiChip-label .MuiChip-labelMedium
+      display: -webkit-inline-box;
+      justify-content: center;
+      position: relative;
+      user-select: none;
+      max-width: 100%;
+      font-family: "Roboto","Helvetica","Arial",sans-serif;
+      font-size: 0.8125rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      border-radius: 16px;
+      white-space: nowrap;
+      transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      cursor: unset;
+      outline: 0;
+      text-decoration: none;
+      border: 0;
+      padding: 0 0 0 12px;
+      vertical-align: middle;
+      box-sizing: border-box;
+      // &:nth-of-type(odd) {
         background-color: $main-color;
-      }
-      &:nth-of-type(even) {
-        background-color: $secondary-color;
-      }
+      // }
+      // &:nth-of-type(even) {
+        // background-color: $secondary-color;
+      // }
       color: #fff;
       margin: 5px 5px;
       box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+
+      .operation-btns {
+        background-color: $secondary-color;
+        margin-left: 5px;
+        padding-left: 2.5px;
+        padding-right: 12px;
+        border-radius: 0 16px 16px 0;
+        height: 32px;
+        display: flex;
+        align-items: center;
+      }
+      .operation-btn {
+        font-size: 12px;
+        margin-left: 5px;
+        cursor: pointer;
+        &:hover, &:focus, &:active {
+          color: darken(#fff, 20%);
+          transform: scale(1.2);
+          transition: transform 0.2s ease-in-out;
+        }
+      }
+      .close-btn {
+        font-size: 12px;
+        margin-right: 7.5px;
+        margin-top: 2px;
+      }
+      input[type="number"] {
+        font-size: 12px;
+        width: fit-content;
+        max-width: 20px;
+        margin: 0 0 2px 6px;
+        padding-left: 6px;
+        color: white;
+
+        &:focus {
+          outline: none;
+          background-color: $secondary-color;
+        }
+      }
     }
   }
 
@@ -254,12 +314,34 @@ th {
 td {
   text-align: center;
   font-weight: 300;
+
+  .operator {
+    color: $secondary-color;
+    font-weight: 600;
+    font-size: 16px;
+    margin-left: 5px;
+    cursor: pointer;
+    &:first-of-type {
+      margin-right: 10px;
+    }
+    &:hover, &:focus, &:active {
+      color: $main-color;
+      transform: scale(1.9);
+      transition: transform 0.2s ease-in-out;
+    }
+  }
 }
 input[type="number"] {
-  width: 50px;
+  width: 25px;
   background-color: transparent;
   border: none;
   color: #000;
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  -moz-appearance: textfield; // Firefox
 
   // change up and down arrows to white
   &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {

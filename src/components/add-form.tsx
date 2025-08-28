@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FormControl, InputLabel, NativeSelect, Chip } from "@mui/material";
+import { FormControl, InputLabel, NativeSelect } from "@mui/material";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -24,6 +24,13 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
         if (selectedCPTs.length === 0) setSelectedCPTs([cpt]) 
         else setSelectedCPTs(prev => [...prev, cpt])
         }
+    }
+
+    const updateCPTQuantity = (cpt: any, quantity: string | number) => {
+        cpt.Quantity = typeof quantity === 'string' ? parseInt(quantity) : quantity;
+        if (isNaN(cpt.Quantity) || cpt.Quantity < 1) cpt.Quantity = 1
+        setSelectedCPTs([...selectedCPTs.filter(selected => selected.id !== cpt.id), cpt])
+        console.log("Updated CPT Quantity", cpt, "to", cpt.Quantity)
     }
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -114,7 +121,16 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
             </FormControl>
             <div className="chips-container">
                 {selectedCPTs.map((cpt: any) => (
-                    <Chip key={cpt.id} label={getCPTChip(cpt)} onDelete={() => removeCPTCode(cpt.id)} />
+                    // <Chip key={cpt.id} label={getCPTChip(cpt)} onDelete={() => removeCPTCode(cpt.id)} />
+                    <div className="custom-chip" key={cpt.id}>
+                        <span className="operation-btn close-btn" onClick={() => removeCPTCode(cpt.id)}>&#10005;</span>
+                        {getCPTChip(cpt)}
+                        <div className="operation-btns">
+                            <span className="operation-btn" onClick={() => updateCPTQuantity(cpt, (cpt.Quantity + 1))}>&#43;</span>
+                            <input type="number" min="1" value={cpt.Quantity} onChange={(e) => updateCPTQuantity(cpt, e.target.value)} />
+                            <span className="operation-btn" onClick={() => { if (cpt.Quantity > 1) updateCPTQuantity(cpt, (cpt.Quantity - 1)) }}>&#8722;</span>
+                        </div>
+                    </div>
                 ))}
             </div>
             <div className="submit-container">

@@ -71,8 +71,9 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
       }
     }
 
-    const updateQuantity = (id: string, value: string) => {
-      const newQuantity = parseInt(value);
+    const updateQuantity = (id: string, value: string | number) => {
+      const newQuantity = typeof value === 'string' ? parseInt(value) : value;
+      // console.log("Updating quantity for RVU with ID:", id, "to", newQuantity);
       if (isNaN(newQuantity) || newQuantity < 0) return; // Ignore invalid input
       const updatedCSVObjects = CSVObjects.map(cpt => 
         cpt.id === id ? { ...cpt, Quantity: newQuantity } : cpt
@@ -289,7 +290,11 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                   <td>{cpt.wRVU.toFixed(2)}</td>
                   <td>${cpt.Compensation.toFixed(2)}</td>
                   <td>{cpt.Category}</td>
-                  <td><input type="number" min="1" value={cpt.Quantity} onChange={(e) => updateQuantity(cpt.id, e.target.value)} /></td>
+                  <td>
+                    <span className="operator" onClick={() => updateQuantity(cpt.id, (cpt.Quantity + 1))}>&#43;</span>
+                    <input type="number" min="1" value={cpt.Quantity} onChange={(e) => updateQuantity(cpt.id, e.target.value)} />
+                    <span className="operator" onClick={() => { if (cpt.Quantity > 1) updateQuantity(cpt.id, (cpt.Quantity - 1)) }}>&#8722;</span>
+                  </td>
                   <td className="d-flex"><RemoveCircleIcon id="remove-icon" onClick={handleOpenRemoveModal(cpt)} /></td>
                 </tr>
               ))}
