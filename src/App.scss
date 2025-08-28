@@ -309,6 +309,17 @@ th {
         }
       }
     }
+
+    .searchToggle {
+      margin-right: 10px;
+      cursor: pointer;
+      color: $secondary-color;
+      &:hover, &:focus, &:active {
+        color: $accent-color;
+        transform: scale(1.2);
+        transition: transform 0.2s ease-in-out;
+      }
+    }
   }
 }
 td {

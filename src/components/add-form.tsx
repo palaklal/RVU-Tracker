@@ -8,6 +8,7 @@ import { Dayjs } from 'dayjs';
 import CPTs from '../data/CPTs';
 import '../App.scss';              
 import { sortObjectsByDate, sortRowsByDate } from '../helper-functions/sort.ts';
+import type { IRVU } from "../types/IRVU";
 
 const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) => { // TODO: remove setCSVObjects (and maybe setCSVData) once updateCSV is implemented
     const [date, setDate] = useState<Dayjs | null>(null);
@@ -26,7 +27,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
         }
     }
 
-    const updateCPTQuantity = (cpt: any, quantity: string | number) => {
+    const updateCPTQuantity = (cpt: IRVU, quantity: string | number) => {
         cpt.Quantity = typeof quantity === 'string' ? parseInt(quantity) : quantity;
         if (isNaN(cpt.Quantity) || cpt.Quantity < 1) cpt.Quantity = 1
         setSelectedCPTs([...selectedCPTs.filter(selected => selected.id !== cpt.id), cpt])
@@ -39,7 +40,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
         setFormStatus({text: (`Adding ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `...`), type: 'loading'});
         try {
             let rows: any[] = [];
-            selectedCPTs.forEach((cpt: any) => {
+            selectedCPTs.forEach((cpt: IRVU) => {
                 // Prepare CSV row: ID, Date, CPT Code, Description, wRVU, Compensation, Category, Quantity
                 const row = [
                     cpt.id,
@@ -93,7 +94,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
         }
     };
 
-    const getCPTChip = (cpt: any) => {
+    const getCPTChip = (cpt: IRVU) => {
         return cpt.Date + " - " + cpt.Description
     };
     const removeCPTCode = (selectedId: number) => {
@@ -112,7 +113,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
                 <InputLabel variant="standard" htmlFor="RVU" shrink={true}> RVU </InputLabel>
                 <NativeSelect value="" onChange={e => addSelectedCPTs(e.target.value)} inputProps={{ name: 'RVU', id: 'RVU', }}>
                     <option value=""></option>
-                    {CPTs.map((cpt: any) => (
+                    {CPTs.map((cpt: IRVU) => (
                         <option key={cpt["CPT Code"]} value={JSON.stringify(cpt)}>
                             {cpt["CPT Code"]} - {cpt.Description}
                         </option>
@@ -120,7 +121,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
                 </NativeSelect>
             </FormControl>
             <div className="chips-container">
-                {selectedCPTs.map((cpt: any) => (
+                {selectedCPTs.map((cpt: IRVU) => (
                     // <Chip key={cpt.id} label={getCPTChip(cpt)} onDelete={() => removeCPTCode(cpt.id)} />
                     <div className="custom-chip" key={cpt.id}>
                         <span className="operation-btn close-btn" onClick={() => removeCPTCode(cpt.id)}>&#10005;</span>

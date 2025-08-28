@@ -8,10 +8,14 @@ import DialogContentText from '@mui/material/DialogContentText';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import SearchIcon from '@mui/icons-material/Search';
+import SearchOffIcon from '@mui/icons-material/SearchOff';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import { useState } from 'react'
 
 import '../App.scss'
+import type { IRVU } from "../types/IRVU";
 
 const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
     const exportCSV = () => {
@@ -71,6 +75,21 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
       }
     }
 
+    const [clearModal, setClearModal] = useState(false);
+    const setClearModalToTrue = () => {
+      console.log("Opening clear table modal")
+      setClearModal(true)
+    }
+    const handleCloseClear = (continueClear: boolean) => {
+      if (continueClear) clear()
+      setClearModal(false)
+    }
+    const clear = () => {
+      const initialCSV = 'id,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n';
+      setCSVData(initialCSV);
+      setCSVObjects([]);
+    }
+
     const updateQuantity = (id: string, value: string | number) => {
       const newQuantity = typeof value === 'string' ? parseInt(value) : value;
       // console.log("Updating quantity for RVU with ID:", id, "to", newQuantity);
@@ -94,8 +113,14 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
     }
 
     const [removeModal, setRemoveModal] = useState(false);
-    const [currentRVU, setCurrentRVU] = useState(null);
-    const handleOpenRemoveModal = (cpt: any) => () => {
+    const [currentRVU, setCurrentRVU] = useState<IRVU | null>(null);
+    const [showSearch, setShowSearch] = useState(false);
+
+    const toggleSearch = (value: boolean) => () => {
+      setShowSearch(value)
+    }
+
+    const handleOpenRemoveModal = (cpt: IRVU) => () => {
       console.log("Opening remove modal for RVU:", cpt);
       setCurrentRVU(cpt);
       setRemoveModal(true);
@@ -110,7 +135,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
       }
     };
 
-    const removeRVU = (RVU: any) => {
+    const removeRVU = (RVU: IRVU) => {
       // TODO: remove RVU from local CSV file
 
 
@@ -200,28 +225,21 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                 <input type="file" accept=".csv" style={{ display: "none" }} id="csv-import-input" onChange={importCSV}/>
                 <Chip className="button" icon={<FileDownloadIcon />} label="Import" variant="outlined" onClick={clickImport} />
                 <Chip className="button" icon={<FileUploadIcon />} label="Export" variant="outlined" onClick={exportCSV} />
+                <Chip className="button" icon={<DeleteForeverIcon />} label="Clear" variant="outlined" onClick={setClearModalToTrue} />
               </span>
-              <span><Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc: number, cpt: any) => acc + cpt.Compensation * (cpt.Quantity || 1), 0).toFixed(2)} variant="outlined" /></span>
+              <span><Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc: number, cpt: IRVU) => acc + cpt.Compensation * (cpt.Quantity || 1), 0).toFixed(2)} variant="outlined" /></span>
             </div>
           <Table stickyHeader={true} className="cpt-table">
             <thead>
               <tr>
-                <th colSpan={7}>
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    className="search-input"
-                    onChange={filter}
-                  />
-                </th>
-              </tr>
-              <tr>
                 <th>
                   <span className="th-container">
+                    { !showSearch && <SearchIcon className="searchToggle" title="Show Search Bar" onClick={toggleSearch(true)} /> }
+                    { showSearch && <SearchOffIcon className="searchToggle" title="Hide Search Bar" onClick={toggleSearch(false)} /> }
                     Date
                     <span className="sort-icons">
                       <span className="karet" title="Sort Ascending" onClick={sort("Date", true)}>▲</span>
-                      <span className="karet" title="Sort Descending" onClick={sort("Date", true)}>▼</span>
+                      <span className="karet" title="Sort Descending" onClick={sort("Date", false)}>▼</span>
                     </span></span>
                 </th>
                 <th>
@@ -280,9 +298,19 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
                 </th>
                 <th></th>
               </tr>
+              { showSearch && <tr>
+                <th colSpan={7}>
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="search-input"
+                    onChange={filter}
+                  />
+                </th>
+              </tr> }
             </thead>
             <tbody>
-              {CSVObjects.map((cpt: any) => (
+              {CSVObjects.map((cpt: IRVU) => (
                 <tr key={cpt.id}>
                   <td >{cpt.Date}</td> 
                   <td>{cpt["CPT Code"]}</td>
@@ -341,6 +369,24 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
               </DialogActions>
             </Dialog> 
           }
+          <Dialog
+            open={clearModal}
+            onClose={handleCloseClear}
+            aria-labelledby="alert-clear-table"
+            aria-describedby="alert-clear-table-row"
+            maxWidth="xl"
+            className="dialog"
+          >
+            <DialogContent className="remove-dialog">
+              <DialogContentText id="alert-clear-table-row">
+                Are you sure you want to clear this table?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions className="remove-dialog">
+              <Button onClick={() => handleCloseClear(false)}>No</Button>
+              <Button onClick={() => handleCloseClear(true)} autoFocus> Yes </Button>
+            </DialogActions>
+          </Dialog> 
         </div>
     )
 }
