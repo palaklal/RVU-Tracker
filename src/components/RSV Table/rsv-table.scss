@@ -122,6 +122,15 @@ input[type="number"] {
   }
 }
 
+.button {
+  svg:hover, svg:focus, svg:active {
+    @include active-icon($main-color);
+  }
+  path {
+    fill: $secondary-color;
+  }
+}
+
 #remove-icon {
   color: $red;
   cursor: pointer;
@@ -153,5 +162,36 @@ input[type="number"] {
     border-radius: 5px;
     padding: 10px;
     border-radius: 5px;
+  }
+}
+
+.totals {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  line-height: 1;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  
+  .MuiChip-root {
+    margin-right: 10px;
+    
+    &.info {
+      // backdrop-filter: grayscale(50%);
+      background-color: white;
+      border-radius: 5px;
+      font-weight: 900;
+    }
+    &.button {
+      background-color: transparent;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+      align-self: center;
+      border: #fff .5px solid;
+      cursor: pointer;
+      &:hover, &:focus, &:active {
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+      }
+    }
   }
 }

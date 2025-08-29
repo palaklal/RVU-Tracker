@@ -87,6 +87,7 @@ form {
       .operation-btn {
         font-size: 14px;
         margin-left: 5px;
+        margin-bottom: 2.5px;
         cursor: pointer;
         &:hover, &:focus, &:active {
           color: $accent-color;
@@ -125,7 +126,7 @@ form {
     button[type="submit"] {
       display: flex;
       align-items: center;
-      background-color: #536584;
+      background-color: $secondary-color;
       backdrop-filter: saturate(10);
       color: white;
       padding: 10px 20px;
