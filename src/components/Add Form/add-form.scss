@@ -155,29 +155,4 @@ form {
       }
     }
   }
-  .form-status {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: #fff;
-    padding: .5rem;
-    border-radius: 2px;
-    min-width: 20rem;
-    text-align: center;
-    font-weight: 300;
-    text-shadow: 0 0 1rem rgba(255, 255, 255, 0.5);
-
-    &.success {
-      background-color: #6dbf73;
-    }
-    &.loading {
-      backdrop-filter: saturate(90%);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      color: #666666;
-    }
-    &.error {
-      background-color: $red;
-    }
-  }
 }

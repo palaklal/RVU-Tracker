@@ -4,9 +4,9 @@ An **in-progress** React application that tracks RVUs for doctors. Built using R
 
 Currently supports:
 <ul>
-    <li>Importing a table of RVUs from a local spreadsheet file</li>
-    <li>Adding multiple RVUs simultaneously by date using the Form's (currently) prepopulated dropdown of RVUs</li>
-    <li>Importing, exporting, and removing from the RVU table</li>
+    <li>Managing a table of RVUs saved locally to your computer as a .CSV that you can directly interact with.</li>
+    <li>Adding multiple RVUs simultaneously by date using the Form's prepopulated dropdown of RVUs</li>
+    <li>Importing, exporting, removing from, clearing, and saving the RVU table</li>
 </ul>
 
-![RVU Tracker](./src/assets/screenshots/Screenshot%205.png)
+![RVU Tracker](./src/assets/screenshots/Screenshot%206.png)

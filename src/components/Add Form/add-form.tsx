@@ -6,6 +6,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import AddIcon from '@mui/icons-material/Add';
+import Alert from '@mui/material/Alert';
 import { styled } from '@mui/system';
 import { Dayjs } from 'dayjs';
 
@@ -13,7 +14,7 @@ import CPTs from '../../data/CPTs.ts';
 import '../../App.scss';
 import './add-form.scss';              
 import { sortObjectsByDate, sortRowsByDate } from '../../helper-functions/sort.ts';
-import type { IRVU } from "../../types/IRVU.ts";
+import type { RVU } from "../../types/RVU.ts";
 
 const GroupHeader = styled('div')(() => ({
   position: 'sticky',
@@ -28,21 +29,22 @@ const GroupItems = styled('ul')({
 
 const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) => { // TODO: remove setCSVObjects (and maybe setCSVData) once updateCSV is implemented
     useEffect(() => {
-        CPTs.sort((a: IRVU, b: IRVU) => a.Category.localeCompare(b.Category)); // sort CPTs by Category for Automplete grouping
+        CPTs.sort((a: RVU, b: RVU) => a.Category.localeCompare(b.Category)); // sort CPTs by Category for Automplete grouping
     }, []);
 
     const [date, setDate] = useState<Dayjs | null>(null);
     const [selectedCPTs, setSelectedCPTs] = useState<any[]>([]);
     const [formStatus, setFormStatus] = useState<any>({text: '', type: ''});
+    const [AutocompleteValue, setAutocompleteValue] = useState<RVU | null>(null); // unclear on exact mechanism but results in input field being cleared after selection
 
-    const addSelectedCPT = (cpt: IRVU): void => {
+    const addSelectedCPT = (cpt: RVU): void => {
         // console.log("Adding CPT", cpt)
         cpt.Date = date ? date.format('YYYY-MM-DD') : null
         cpt.id = Math.random();
         cpt.Quantity = 1; // Default to 1 if Quantity is not provided
         if (selectedCPTs.length === 0) setSelectedCPTs([cpt]) 
         else {
-            let existingCPT: IRVU | null = selectedCPTs.find(selected => selected.Description === cpt.Description)
+            let existingCPT: RVU | null = selectedCPTs.find(selected => selected.Description === cpt.Description)
             if (existingCPT) {
                 existingCPT.Quantity += cpt.Quantity;
                 setSelectedCPTs([...selectedCPTs.filter(selected => selected.id !== existingCPT.id), existingCPT])
@@ -51,7 +53,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
         }
     }
 
-    const updateCPTQuantity = (cpt: IRVU, quantity: string | number): void => {
+    const updateCPTQuantity = (cpt: RVU, quantity: string | number): void => {
         cpt.Quantity = typeof quantity === 'string' ? parseInt(quantity) : quantity;
         if (isNaN(cpt.Quantity) || cpt.Quantity < 1) cpt.Quantity = 1
         setSelectedCPTs([...selectedCPTs.filter(selected => selected.id !== cpt.id), cpt])
@@ -64,7 +66,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
         setFormStatus({text: (`Adding ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `...`), type: 'loading'});
         try {
             let rows: any[] = [];
-            selectedCPTs.forEach((cpt: IRVU) => {
+            selectedCPTs.forEach((cpt: RVU) => {
                 // Prepare CSV row: ID, Date, CPT Code, Description, wRVU, Compensation, Category, Quantity
                 const row = [
                     cpt.id,
@@ -118,7 +120,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
         }
     };
 
-    const getCPTChip = (cpt: IRVU) => {
+    const getCPTChip = (cpt: RVU) => {
         return `${cpt['CPT Code']} - ${cpt.Description} ($${cpt.Compensation})`
     };
     const removeCPTCode = (selectedId: number) => {
@@ -136,9 +138,9 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
             <FormControl className="form-control" fullWidth>
                 <Autocomplete
                     options={CPTs}
-                    groupBy={(option: IRVU) => option.Category}
-                    getOptionLabel={(option: IRVU) => getCPTChip(option)}
-                    renderOption={(props, option: IRVU) => (
+                    groupBy={(option: RVU) => option.Category}
+                    getOptionLabel={(option: RVU) => getCPTChip(option)}
+                    renderOption={(props, option: RVU) => (
                         <li {...props} key={option.id}>
                             <span style={{ fontWeight: 'bold' }}>{option['CPT Code']}&nbsp;</span>- {option.Description}&nbsp;<span style={{ fontWeight: '100' }}>(${option.Compensation})</span>
                         </li>
@@ -150,14 +152,15 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
                             <GroupItems key={Math.random()}>{params.children}</GroupItems>
                         </li>
                     )}
-                    onChange={(_ : any, newValue: IRVU | null) => { if (newValue) addSelectedCPT(newValue) }}
+                    value={AutocompleteValue}
+                    onChange={(_ : any, newValue: RVU | null) => { if (newValue) addSelectedCPT(newValue) }}
                     disabled={!date}
                 />
             </FormControl>
             <div className="chips-container">
                 {selectedCPTs
                     .sort((a, b) => a['CPT Code'].localeCompare(b['CPT Code']))
-                    .map((cpt: IRVU) => (
+                    .map((cpt: RVU) => (
                     // <Chip key={cpt.id} label={getCPTChip(cpt)} onDelete={() => removeCPTCode(cpt.id)} />
                     <div className="custom-chip" key={cpt.id}>
                         <div className="close-btn-container"><span className="operation-btn close-btn" onClick={() => removeCPTCode(cpt.id)}>&#10005;</span></div>
@@ -175,7 +178,9 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
                 <AddIcon style={{ marginRight: 4 }} />
                     Add RVUs
                 </button>
-            {formStatus.type && <div className={formStatus.type + " form-status"}>{formStatus.text}</div>}
+            {formStatus.type === 'success' && <Alert variant="filled" severity="success" onClose={() => { setFormStatus('')}}>{formStatus.text}</Alert>}
+            {formStatus.type === 'error' && <Alert variant="filled"  severity="error" onClose={() => { setFormStatus('')}}>{formStatus.text}</Alert>}
+            {formStatus.type === 'loading' && <Alert variant="filled"  severity="info" onClose={() => { setFormStatus('')}}>{formStatus.text}</Alert>}
             </div>
         </form>
     );

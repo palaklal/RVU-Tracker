@@ -10,12 +10,14 @@ function App() {
   const [CSVObjects, setCSVObjects] = useState<any[]>([]);
 
 /*
-TODO: Need to revisit how to store and handle user's data because you cannot write to a local file in the browser.
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
-TODO: This add form should update/save to the CSV file (add Save button to form) OR RATHER A DB
-TODO: Add more analytics, color labels for categories to table
-TODO: Add way to filtering by date, monthly summaries
+TODO: Fix bug where adding an RVU with the same date and description creates a double entry instead of incrementing quantity
+TODO: Add color labels for categories in table and customizable categories, CPTs, etc.
+TODO: Add way to filtering by date, monthly summaries, analytics charts/graphs
 TODO: Add calendar view for RVUs
+TODO: Add pagination to table (and maybe use Material's UI DataGrid, sorting, filtering, etc.)
+TODO: Add tooltips
+TODO: Add directions (reminding user to save progress & use Chromium browsers) at top
 ?Add menu on side of website to Add CPT codes (this), summarize, display CSV in table (including import and export). Each page will have a different background image.
 */
   
