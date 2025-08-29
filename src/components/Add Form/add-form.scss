@@ -1,0 +1,183 @@
+@import "../../App";
+
+form {
+  .form-control, button {
+    margin-top: 2rem;
+  }
+
+  .MuiFormControl-root.MuiPickersTextField-root.date {
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  }
+  
+  .MuiInputBase-root {
+    // border: .5px solid #1d1b1b;
+    padding: 8px 10px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    transition: 'all 0.3s ease-in-out';
+    border-radius: 4px;
+
+    &.Mui-disabled {
+      box-shadow: none;
+    }
+  }
+
+  .MuiAutocomplete-root {
+    width: 100%;
+  }
+
+  .chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px 0;
+
+    .custom-chip { // based on Material MUI Chip .MuiChip-label .MuiChip-labelMedium
+      display: -webkit-inline-box;
+      justify-content: center;
+      position: relative;
+      user-select: none;
+      max-width: 100%;
+      font-family: "Roboto","Helvetica","Arial",sans-serif;
+      font-size: 0.8125rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      border-radius: 16px;
+      white-space: nowrap;
+      transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      cursor: unset;
+      outline: 0;
+      text-decoration: none;
+      border: 0;
+      padding: 0 0 0 0;
+      vertical-align: middle;
+      box-sizing: border-box;
+      // &:nth-of-type(odd) {
+        background-color: $main-color;
+      // }
+      // &:nth-of-type(even) {
+        // background-color: $secondary-color;
+      // }
+      color: #fff;
+      margin: 5px 5px;
+      box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+
+      .close-btn-container {
+        // background-color: darken($main-color, 1%);
+        color: $red;
+        border-radius: 16px 0 0 16px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        margin-right: 5px;
+        padding-right: 2.5px;
+        padding-left: 6px;
+      }
+      .operation-btns {
+        background-color: lighten($main-color, 3%);
+        margin-left: 5px;
+        padding-left: 2.5px;
+        padding-right: 10px;
+        border-radius: 0 16px 16px 0;
+        height: 32px;
+        display: flex;
+        align-items: center;
+      }
+      .operation-btn {
+        font-size: 14px;
+        margin-left: 5px;
+        cursor: pointer;
+        &:hover, &:focus, &:active {
+          color: $accent-color;
+          transform: scale(1.5);
+          transition: transform 0.2s ease-in-out;
+        }
+      }
+      .close-btn {
+        font-size: 12px;
+        margin-right: 7.5px;
+        margin-top: 2px;
+      }
+      input[type="number"] {
+        font-size: 12px;
+        width: fit-content;
+        max-width: 20px;
+        margin: 0 0 2px 6px;
+        padding-left: 3px;
+        color: white;
+
+        &:focus {
+          outline: none;
+          background-color: $secondary-color;
+        }
+      }
+    }
+  }
+
+.submit-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    
+    button[type="submit"] {
+      display: flex;
+      align-items: center;
+      background-color: #536584;
+      backdrop-filter: saturate(10);
+      color: white;
+      padding: 10px 20px;
+      font-weight: 200;
+      letter-spacing: 1px;
+      border: #fff .5px solid;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+
+      &:hover, &:focus, &:active {
+        backdrop-filter: saturate(3);
+        color: #fff;
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+        border: none;
+      }
+      &:disabled {
+        background-color: transparent;
+        backdrop-filter: saturate(90%);
+        color: #666;
+        cursor: not-allowed;
+        box-shadow: none;
+
+        &:hover, &:focus, &:active {
+          border: #fff .5px solid;
+        }
+      }
+    }
+  }
+  .form-status {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #fff;
+    padding: .5rem;
+    border-radius: 2px;
+    min-width: 20rem;
+    text-align: center;
+    font-weight: 300;
+    text-shadow: 0 0 1rem rgba(255, 255, 255, 0.5);
+
+    &.success {
+      background-color: #6dbf73;
+    }
+    &.loading {
+      backdrop-filter: saturate(90%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #666666;
+    }
+    &.error {
+      background-color: $red;
+    }
+  }
+}

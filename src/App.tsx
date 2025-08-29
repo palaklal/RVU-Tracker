@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import './App.scss'
-import AddForm from './components/add-form.tsx'
-import RSVTable from './components/rsv-table.tsx'
-import Spinner from './components/spinner.tsx'
+import AddForm from './components/Add Form/add-form.tsx'
+import RSVTable from './components/RSV Table/rsv-table.tsx'
+import Spinner from './components/Spinner/spinner.tsx'
 import { sortRowsByDate } from './helper-functions/sort.ts'
 
 function App() {

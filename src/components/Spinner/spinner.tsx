@@ -1,4 +1,5 @@
 import { CircularProgress, Box } from "@mui/material";
+import "./spinner.scss"
 
 const Spinner = () => {
     return (

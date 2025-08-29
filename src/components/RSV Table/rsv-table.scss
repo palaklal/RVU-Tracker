@@ -1,0 +1,157 @@
+@import "../../App";
+
+/* Table styles */
+.MuiTable-root {
+  width: 100%;
+  margin-top: 10px;
+  // box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+  border: solid 1px rgba(255, 255, 255, 0.5);
+  background-color: #fff;
+  // opacity: 0.5;
+  color: #000;
+  border-radius: 5px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 6px;
+  font-size: 1rem;
+  border: none;
+  color: $secondary-color;
+  background-color: transparent;
+  &:focus {
+    outline: 1px solid $secondary-color;
+    border-radius: 4px;
+  }
+}
+
+th {
+  color: $main-color;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+
+  .th-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+
+    .sort-icons {
+      display: flex;
+      flex-direction: column;
+      margin-left: 8px;
+      cursor: pointer;
+      color: $secondary-color;
+
+
+      .karet {
+        font-size: 10px;
+        &:hover {
+          color: $accent-color;
+        }
+      }
+    }
+
+    .searchToggle {
+      margin-right: 10px;
+      cursor: pointer;
+      color: $secondary-color;
+      &:hover, &:focus, &:active {
+        color: $accent-color;
+        transform: scale(1.2);
+        transition: transform 0.2s ease-in-out;
+      }
+    }
+  }
+}
+td {
+  text-align: center;
+  font-weight: 300;
+
+  .operator {
+    color: $secondary-color;
+    font-weight: 600;
+    font-size: 16px;
+    margin-left: 5px;
+    cursor: pointer;
+    &:first-of-type {
+      margin-right: 10px;
+    }
+    &:hover, &:focus, &:active {
+      color: $accent-color;
+      transform: scale(1.5);
+      transition: transform 0.2s ease-in-out;
+    }
+  }
+}
+input[type="number"] {
+  width: 25px;
+  background-color: transparent;
+  border: none;
+  color: #000;
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  -moz-appearance: textfield; // Firefox
+
+  // change up and down arrows to white
+  &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    color: #fff;
+  }
+  &::-webkit-input-placeholder {
+    color: #fff;
+  }
+  &:-ms-input-placeholder {
+    color: #fff;
+  }
+  &::placeholder {
+    color: #fff;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: #f0f0f0;
+  }
+}
+
+#remove-icon {
+  color: $red;
+  cursor: pointer;
+  &:hover, &:focus, &:active {
+    @include active-icon($red);
+  }
+}
+
+.dialog .MuiPaper-root {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.remove-dialog {
+  min-width: 800px;
+  background-color: $red;
+  color: #fff;
+  letter-spacing: 1px;
+
+  p, Button {
+    color: #fff;
+    font-weight: 500;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 10px;
+    border: solid 1px #fff;
+    background-color: #fff;
+    color: #000;
+    border-radius: 5px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+}

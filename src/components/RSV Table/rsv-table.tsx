@@ -14,8 +14,9 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import { useState } from 'react'
 
-import '../App.scss'
-import type { IRVU } from "../types/IRVU";
+import '../../App.scss'
+import './rsv-table.scss'
+import type { IRVU } from "../../types/IRVU";
 
 const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
     const exportCSV = () => {

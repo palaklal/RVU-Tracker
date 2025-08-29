@@ -9,10 +9,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/system';
 import { Dayjs } from 'dayjs';
 
-import CPTs from '../data/CPTs';
-import '../App.scss';              
-import { sortObjectsByDate, sortRowsByDate } from '../helper-functions/sort.ts';
-import type { IRVU } from "../types/IRVU";
+import CPTs from '../../data/CPTs.ts';
+import '../../App.scss';
+import './add-form.scss';              
+import { sortObjectsByDate, sortRowsByDate } from '../../helper-functions/sort.ts';
+import type { IRVU } from "../../types/IRVU.ts";
 
 const GroupHeader = styled('div')(() => ({
   position: 'sticky',
@@ -27,7 +28,7 @@ const GroupItems = styled('ul')({
 
 const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) => { // TODO: remove setCSVObjects (and maybe setCSVData) once updateCSV is implemented
     useEffect(() => {
-        CPTs.sort((a: IRVU, b: IRVU) => a.Category.localeCompare(b.Category));
+        CPTs.sort((a: IRVU, b: IRVU) => a.Category.localeCompare(b.Category)); // sort CPTs by Category for Automplete grouping
     }, []);
 
     const [date, setDate] = useState<Dayjs | null>(null);
