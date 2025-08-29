@@ -8,6 +8,7 @@ $red: #ff4d4d;
     transform: scale(1.1);
     transition: transform 0.2s ease-in-out;
     color: darken($color, 10%);
+    // color.adjust($color, $lightness: 10%);
   }
 }
 
@@ -35,7 +36,7 @@ body {
   text-align: center;
   border-radius: 1rem;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 1);
-  backdrop-filter: blur(40px);
+  backdrop-filter: blur(30px);
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
@@ -67,7 +68,7 @@ form {
   }
   
   .MuiInputBase-root {
-    border: .5px solid #1d1b1b;
+    // border: .5px solid #1d1b1b;
     padding: 8px 10px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     transition: 'all 0.3s ease-in-out';
@@ -76,6 +77,10 @@ form {
     &.Mui-disabled {
       box-shadow: none;
     }
+  }
+
+  .MuiAutocomplete-root {
+    width: 100%;
   }
 
   .chips-container {
@@ -103,7 +108,7 @@ form {
       outline: 0;
       text-decoration: none;
       border: 0;
-      padding: 0 0 0 12px;
+      padding: 0 0 0 0;
       vertical-align: middle;
       box-sizing: border-box;
       // &:nth-of-type(odd) {
@@ -116,23 +121,34 @@ form {
       margin: 5px 5px;
       box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
 
+      .close-btn-container {
+        // background-color: darken($main-color, 1%);
+        color: $red;
+        border-radius: 16px 0 0 16px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        margin-right: 5px;
+        padding-right: 2.5px;
+        padding-left: 6px;
+      }
       .operation-btns {
-        background-color: $secondary-color;
+        background-color: lighten($main-color, 3%);
         margin-left: 5px;
         padding-left: 2.5px;
-        padding-right: 12px;
+        padding-right: 10px;
         border-radius: 0 16px 16px 0;
         height: 32px;
         display: flex;
         align-items: center;
       }
       .operation-btn {
-        font-size: 12px;
+        font-size: 14px;
         margin-left: 5px;
         cursor: pointer;
         &:hover, &:focus, &:active {
-          color: darken(#fff, 20%);
-          transform: scale(1.2);
+          color: $accent-color;
+          transform: scale(1.5);
           transition: transform 0.2s ease-in-out;
         }
       }
@@ -146,7 +162,7 @@ form {
         width: fit-content;
         max-width: 20px;
         margin: 0 0 2px 6px;
-        padding-left: 6px;
+        padding-left: 3px;
         color: white;
 
         &:focus {
@@ -336,8 +352,8 @@ td {
       margin-right: 10px;
     }
     &:hover, &:focus, &:active {
-      color: $main-color;
-      transform: scale(1.9);
+      color: $accent-color;
+      transform: scale(1.5);
       transition: transform 0.2s ease-in-out;
     }
   }

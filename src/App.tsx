@@ -10,13 +10,12 @@ function App() {
   const [CSVObjects, setCSVObjects] = useState<any[]>([]);
 
 /*
-TODO: Replace RVU Chips in Add Form with a custom chip that includes number input for Quantity
 TODO: Need to revisit how to store and handle user's data because you cannot write to a local file in the browser.
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
-TODO: This add form should update/save to the CSV file (add Save button to form)
+TODO: This add form should update/save to the CSV file (add Save button to form) OR RATHER A DB
 TODO: Add more analytics, color labels for categories to table
-TODO: ADD FILTER ICON and toggle
-TODO: Add way to search/type CPT code in dropdown (replace with Autocomplete), filtering by date, monthly summaries
+TODO: Add way to filtering by date, monthly summaries
+TODO: Add calendar view for RVUs
 ?Add menu on side of website to Add CPT codes (this), summarize, display CSV in table (including import and export). Each page will have a different background image.
 */
   
@@ -42,7 +41,7 @@ TODO: Add way to search/type CPT code in dropdown (replace with Autocomplete), f
         console.log('Local CSV loaded:', localCSV);
         setCSVData(localCSV);
         const csvRows = localCSV.split('\n').filter(Boolean).map((row: string) => row.split(','));
-        const csvObjects = csvRows.slice(1).map((row: string) => {
+        const csvObjects = csvRows.slice(1).map((row: any) => {
           return {
             id: row[0],
             Date: row[1],
