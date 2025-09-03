@@ -10,7 +10,7 @@ function App() {
   const [CSVData, setCSVData] = useState<string>('');
   const [CSVObjects, setCSVObjects] = useState<any[]>([]);
   const [touched, setTouched] = useState<boolean>(false); // Track if there are unsaved changes
-  const [show, setShow] = useState<'AddForm' | 'Analytics'>('AddForm');
+  const [show, setShow] = useState<'AddForm' | 'Analytics'>('Analytics');
 /*
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: Add color labels for categories in table and customizable categories, CPTs, etc.
@@ -30,7 +30,7 @@ TODO: Add directions (reminding user to save progress & use Chromium browsers) a
 
   const loadLocalCSV = async () => {
     try {
-      console.log('Loading local CSV...');
+      // console.log('Loading local CSV...');
       const response = await fetch('/src/data/RVU-tracker.csv')
       let localCSV = await response.text();
       if (localCSV.includes('<script')) {
@@ -41,7 +41,7 @@ TODO: Add directions (reminding user to save progress & use Chromium browsers) a
       } else {
         localCSV = sortRowsByDate(localCSV.split('\n').slice(1).filter(Boolean).map((row: string) => row.split(',')));
         localCSV = `ID,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n` + localCSV.map((row: any) => row.join(',')).join('\n');
-        console.log('Local CSV loaded:', localCSV);
+        // console.log('Local CSV loaded:', localCSV);
         setCSVData(localCSV);
         const csvRows = localCSV.split('\n').filter(Boolean).map((row: string) => row.split(','));
         const csvObjects = csvRows.slice(1).map((row: any) => {
@@ -57,7 +57,7 @@ TODO: Add directions (reminding user to save progress & use Chromium browsers) a
           };
         });
         setCSVObjects(csvObjects);
-        console.log('CSVObjects loaded:', csvObjects);
+        // console.log('CSVObjects loaded:', csvObjects);
       }
     } catch (error) {
         console.error('Error loading local CSV:', error);
@@ -73,7 +73,7 @@ TODO: Add directions (reminding user to save progress & use Chromium browsers) a
     <>
       <h1 className="title">RVU Tracker</h1>
       { show === 'AddForm' && <AddForm CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} updateCSV={updateCSV} touched={touched} setTouched={setTouched}></AddForm> }
-      { show === 'Analytics' && <Analytics CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} touched={touched} setTouched={setTouched} show={show} setShow={setShow}></Analytics> }
+      { show === 'Analytics' && <Analytics CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} ></Analytics> }
       {!CSVData && <Spinner />}
       {CSVData && <RSVTable CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} touched={touched} setTouched={setTouched} show={show} setShow={setShow}></RSVTable>}
     </>
