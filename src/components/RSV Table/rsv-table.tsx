@@ -13,8 +13,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SaveIcon from '@mui/icons-material/Save';
-import InsightsIcon from '@mui/icons-material/Insights';
-import AddIcon from '@mui/icons-material/Add';
+import InsightsIconOutlined from '@mui/icons-material/Insights';
+import AddIconOutlined from '@mui/icons-material/Add';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import { useState } from 'react'
 
@@ -135,11 +137,9 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
     setCSVObjects([]);
     if (!touched) setTouched(true);
   }
-  const showAddForm = () => {
-    setShow('AddForm')
-  }
-  const showAnalytics = () => {
-    setShow('Analytics')
+
+  const updateShow = (event: React.MouseEvent<HTMLElement>, newShow: string) => {
+    setShow(newShow);
   }
 
   const updateQuantity = (id: string | number, value: string | number) => {
@@ -283,9 +283,23 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
               <Chip className="button" icon={<FileUploadIcon />} label="Export" variant="outlined" onClick={exportCSV} />
               <Chip className="button" icon={<DeleteForeverIcon />} label="Clear" variant="outlined" onClick={setClearModalToTrue} />
             </span>
+            <span style={{ marginRight: "7.5rem" }}>
+              <ToggleButtonGroup
+                color="primary"
+                value={show}
+                exclusive
+                onChange={updateShow}
+                aria-label="Show Add Form or Analytics"
+              >
+                <ToggleButton className={"button " + (show === 'AddForm' ? 'active-show' : '')} value="AddForm" aria-label="Show Add Form">
+                  <AddIconOutlined />Add
+                </ToggleButton>
+                <ToggleButton className={"button " + (show === 'Analytics' ? 'active-show' : '')} value="Analytics" aria-label="Show Analytics">
+                  <InsightsIconOutlined /> Analytics
+                </ToggleButton>              
+              </ToggleButtonGroup>
+            </span>
             <span>
-              <Chip className={"button " + (show === 'AddForm' ? 'active-show' : '')} icon={<AddIcon />} label="Show Add Form" variant="outlined" onClick={showAddForm} />
-              <Chip className={"button " + (show === 'Analytics' ? 'active-show' : '')} icon={<InsightsIcon />} label="Show Analytics" variant="outlined" onClick={showAnalytics} />
               <Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc: number, cpt: RVU) => acc + cpt.Compensation * (cpt.Quantity || 1), 0).toFixed(2)} variant="outlined" />
             </span>
           </div>

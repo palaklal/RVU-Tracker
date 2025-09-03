@@ -10,11 +10,11 @@ function App() {
   const [CSVData, setCSVData] = useState<string>('');
   const [CSVObjects, setCSVObjects] = useState<any[]>([]);
   const [touched, setTouched] = useState<boolean>(false); // Track if there are unsaved changes
-  const [show, setShow] = useState<'AddForm' | 'Analytics'>('Analytics');
+  const [show, setShow] = useState<'AddForm' | 'Analytics'>('AddForm');
 /*
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: Add color labels for categories in table and customizable categories, CPTs, etc.
-TODO: Add way to filtering by date, monthly summaries, analytics charts/graphs that update live as you add more data
+TODO: Add way to filtering by date, monthly summaries
 TODO: Add calendar view for RVUs
 TODO: Add pagination to table (and maybe use Material's UI DataGrid, sorting, filtering, etc.)
 TODO: Add tooltips

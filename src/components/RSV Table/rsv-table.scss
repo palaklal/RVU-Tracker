@@ -134,6 +134,21 @@ input[type="number"] {
   }
 }
 
+.MuiToggleButtonGroup-root {
+  height: 32px;
+
+  .Mui-selected {
+    background-color: $main-color!important;
+    color: #fff !important;
+    cursor: default !important;
+    box-shadow: none !important;
+    path {
+      fill: #fff;
+    }
+    pointer-events: none;
+  }
+}
+
 .button {
   svg:hover, svg:focus, svg:active {
     @include active-icon($main-color);
@@ -146,16 +161,6 @@ input[type="number"] {
     path {
       fill: $accent-color;
       box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
-    }
-  }
-
-  &.active-show {
-    background-color: $main-color!important;
-    color: #fff;
-    cursor: default !important;
-    box-shadow: none !important;
-    path {
-      fill: #ffffff;
     }
   }
 }

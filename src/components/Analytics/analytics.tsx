@@ -28,9 +28,9 @@ const Analytics = ({ CSVObjects, setCSVObjects }) => {
     useEffect(() => {
         if (!CSVObjects || CSVObjects.length === 0) {
             setCategoryData([]);
+            setRVUsOverTimeData([]);
             return;
         }
-        // TODO: Update chart datas whenever CSVObjects change
 
         setLineChartData()
         setDonutChartData()
