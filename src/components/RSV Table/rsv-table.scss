@@ -148,6 +148,16 @@ input[type="number"] {
       box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
     }
   }
+
+  &.active-show {
+    background-color: $main-color!important;
+    color: #fff;
+    cursor: default !important;
+    box-shadow: none !important;
+    path {
+      fill: #ffffff;
+    }
+  }
 }
 
 #save-button {

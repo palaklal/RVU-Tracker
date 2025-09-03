@@ -14,6 +14,7 @@ import SearchOffIcon from '@mui/icons-material/SearchOff';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SaveIcon from '@mui/icons-material/Save';
 import InsightsIcon from '@mui/icons-material/Insights';
+import AddIcon from '@mui/icons-material/Add';
 
 import { useState } from 'react'
 
@@ -21,7 +22,7 @@ import '../../App.scss'
 import './rsv-table.scss'
 import { RVU } from "../../types/RVU";
 
-const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setTouched }) => {
+const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setTouched, show, setShow }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -133,6 +134,12 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
     setCSVData(initialCSV);
     setCSVObjects([]);
     if (!touched) setTouched(true);
+  }
+  const showAddForm = () => {
+    setShow('AddForm')
+  }
+  const showAnalytics = () => {
+    setShow('Analytics')
   }
 
   const updateQuantity = (id: string | number, value: string | number) => {
@@ -277,7 +284,8 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
               <Chip className="button" icon={<DeleteForeverIcon />} label="Clear" variant="outlined" onClick={setClearModalToTrue} />
             </span>
             <span>
-              <Chip className="button" icon={<InsightsIcon />} label="Analytics" variant="outlined" disabled />
+              <Chip className={"button " + (show === 'AddForm' ? 'active-show' : '')} icon={<AddIcon />} label="Show Add Form" variant="outlined" onClick={showAddForm} />
+              <Chip className={"button " + (show === 'Analytics' ? 'active-show' : '')} icon={<InsightsIcon />} label="Show Analytics" variant="outlined" onClick={showAnalytics} />
               <Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc: number, cpt: RVU) => acc + cpt.Compensation * (cpt.Quantity || 1), 0).toFixed(2)} variant="outlined" />
             </span>
           </div>

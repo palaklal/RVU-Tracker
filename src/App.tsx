@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react'
 import './App.scss'
 import AddForm from './components/Add Form/add-form.tsx'
 import RSVTable from './components/RSV Table/rsv-table.tsx'
+import Analytics from './components/Analytics/analytics.tsx'
 import Spinner from './components/Spinner/spinner.tsx'
 import { sortRowsByDate } from './helper-functions/sort.ts'
 
 function App() {
   const [CSVData, setCSVData] = useState<string>('');
   const [CSVObjects, setCSVObjects] = useState<any[]>([]);
-  const [touched, setTouched] = useState(false); // Track if there are unsaved changes
+  const [touched, setTouched] = useState<boolean>(false); // Track if there are unsaved changes
+  const [show, setShow] = useState<'AddForm' | 'Analytics'>('AddForm');
 /*
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: Add color labels for categories in table and customizable categories, CPTs, etc.
@@ -65,15 +67,15 @@ TODO: Add directions (reminding user to save progress & use Chromium browsers) a
   const updateCSV = (newCSV: any[]) => {
     console.log("Updating CSV with new data:", newCSV);
     setCSVObjects(newCSV);
-    // TODO: update/save to local CSV file (and maybe move logic to setCSVData here)
   }
 
   return (
     <>
       <h1 className="title">RVU Tracker</h1>
-      <AddForm CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} updateCSV={updateCSV} touched={touched} setTouched={setTouched}></AddForm>
-        {!CSVData && <Spinner />}
-        {CSVData && <RSVTable CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} touched={touched} setTouched={setTouched}></RSVTable>}
+      { show === 'AddForm' && <AddForm CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} updateCSV={updateCSV} touched={touched} setTouched={setTouched}></AddForm> }
+      { show === 'Analytics' && <Analytics CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} touched={touched} setTouched={setTouched} show={show} setShow={setShow}></Analytics> }
+      {!CSVData && <Spinner />}
+      {CSVData && <RSVTable CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} touched={touched} setTouched={setTouched} show={show} setShow={setShow}></RSVTable>}
     </>
   )
 }
