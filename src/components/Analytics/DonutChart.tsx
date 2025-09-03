@@ -3,13 +3,14 @@ import * as d3 from "d3";
 
 import '../../App.scss'
 
-export default function DonutChart({data, colorPalette}) {
+export default function DonutChart({ data, colorPalette, metadata }) {
+    type DonutChartData = { category: string; count: number };
     const chartRef = useRef<HTMLDivElement>(null);
     
     useEffect(() => {
         console.log("DonutChart data:", data);
         if (!data || data.length === 0) return;
-        type ChartData = { category: string; count: number };
+    
         // Chart dimensions
         const width = 400;
         const height = 300;
@@ -32,12 +33,12 @@ export default function DonutChart({data, colorPalette}) {
             .range(colorPalette);
 
         // Pie generator
-        const pie = d3.pie<ChartData>()
-            .value((d: ChartData) => d.count)
+        const pie = d3.pie<DonutChartData>()
+            .value((d: DonutChartData) => d.count)
             .sort(null);
 
         // Arc generator
-        const arc = d3.arc<d3.PieArcDatum<ChartData>>()
+        const arc = d3.arc<d3.PieArcDatum<DonutChartData>>()
             .innerRadius(radius * 0.33)
             .outerRadius(radius);
 
@@ -84,7 +85,7 @@ export default function DonutChart({data, colorPalette}) {
             .attr('font-size', 16)
             .attr('font-weight', 'bold')
             .attr('fill', '#003d45')
-            .text('Compensation by Category');
+            .text(metadata.title);
     }, [data]);
     return (
         <div ref={chartRef}></div>

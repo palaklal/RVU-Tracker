@@ -14,7 +14,7 @@ function App() {
 /*
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: Add color labels for categories in table and customizable categories, CPTs, etc.
-TODO: Add way to filtering by date, monthly summaries, analytics charts/graphs
+TODO: Add way to filtering by date, monthly summaries, analytics charts/graphs that update live as you add more data
 TODO: Add calendar view for RVUs
 TODO: Add pagination to table (and maybe use Material's UI DataGrid, sorting, filtering, etc.)
 TODO: Add tooltips

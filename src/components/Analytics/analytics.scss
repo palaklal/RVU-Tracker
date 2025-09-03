@@ -1,9 +1,10 @@
 @import "../../App";
 
 .analytics-container {
-    min-height: 279px;
+    // min-height: 279px;
     color: $main-color;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    align-items: center;
+    // justify-content: space-around;
 }
