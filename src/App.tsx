@@ -11,7 +11,6 @@ function App() {
   const [touched, setTouched] = useState(false); // Track if there are unsaved changes
 /*
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
-TODO: Fix bug where adding an RVU with the same date and description creates a double entry instead of incrementing quantity
 TODO: Add color labels for categories in table and customizable categories, CPTs, etc.
 TODO: Add way to filtering by date, monthly summaries, analytics charts/graphs
 TODO: Add calendar view for RVUs
