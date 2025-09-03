@@ -1,6 +1,6 @@
 ## RVU Tracker
 
-An **in-progress** React application that tracks RVUs for doctors. Built using React 19, Vite, Material UI, and SASS.
+An **in-progress** React application that tracks RVUs for doctors. Built using React 19, Vite, Material UI, SASS, and D3.
 
 Currently supports:
 <ul>

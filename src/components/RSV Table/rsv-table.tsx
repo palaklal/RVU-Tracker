@@ -347,7 +347,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
               </th>
               <th>
                 <span className="th-container">
-                Compensation
+                Total Compensation
                 <span className="sort-icons">
                   <span className="karet" title="Sort Ascending" onClick={sort("Compensation", true)}>▲</span>
                   <span className="karet" title="Sort Descending" onClick={sort("Compensation", false)}>▼</span>
@@ -392,7 +392,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
                 <td>{cpt["CPT Code"]}</td>
                 <td>{cpt.Description}</td>
                 <td>{cpt.wRVU.toFixed(2)}</td>
-                <td>${cpt.Compensation.toFixed(2)}</td>
+                <td>${(cpt.Compensation * (cpt.Quantity || 1)).toFixed(2)}</td>
                 <td>{cpt.Category}</td>
                 <td>
                   <span className="operator" onClick={() => updateQuantity(cpt.id, (cpt.Quantity + 1))}>&#43;</span>
