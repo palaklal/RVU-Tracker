@@ -27,7 +27,7 @@ const GroupItems = styled('ul')({
   padding: 0,
 });
 
-const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) => { // TODO: remove setCSVObjects (and maybe setCSVData) once updateCSV is implemented
+const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV, touched, setTouched}) => { // TODO: remove setCSVObjects (and maybe setCSVData) once updateCSV is implemented
     useEffect(() => {
         CPTs.sort((a: RVU, b: RVU) => a.Category.localeCompare(b.Category)); // sort CPTs by Category for Automplete grouping
     }, []);
@@ -106,7 +106,7 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV}) =>
                 console.log("New CSVObjects", newCSVObjects);  
             }
             else updateCSV(selectedCPTs)
-
+            if (!touched) setTouched(true);
             setFormStatus({text: (`Added ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `! Resetting form...`), type: 'success'});
             setTimeout(() => {
                 // Reset form state

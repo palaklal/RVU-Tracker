@@ -20,7 +20,7 @@ import '../../App.scss'
 import './rsv-table.scss'
 import { RVU } from "../../types/RVU";
 
-const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
+const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setTouched }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -48,6 +48,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
         const writable = await fileHandle.createWritable();
         await writable.write(CSVData);
         await writable.close();
+        if (touched) setTouched(false);
         showSuccessMessage('CSV file saved successfully.');
       } else showErrorMessage('File save not supported in this browser. You can still export the CSV file manually by clicking the Export button and replace the existing file in RVU-Tracker/src/data/RVU-tracker.csv (do not change the name).');
     } catch (error) { showErrorMessage('Error saving CSV file. Please try again.', error) }
@@ -111,6 +112,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
               }
           };
           reader.readAsText(file)
+          if (!touched) setTouched(true);
           showSuccessMessage('CSV file imported successfully.');
         } catch (error) { showErrorMessage('Error importing CSV file. Please try again.', error) }
     }
@@ -129,6 +131,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
     const initialCSV = 'id,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n';
     setCSVData(initialCSV);
     setCSVObjects([]);
+    if (!touched) setTouched(true);
   }
 
   const updateQuantity = (id: string | number, value: string | number) => {
@@ -149,6 +152,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
         return columns.join(',');
       })
       .join('\n');
+    if (!touched) setTouched(true);
     setCSVData(updatedCSVData);
     console.log("Updated quantity for RVU with ID:", id, "to", newQuantity);
   }
@@ -191,6 +195,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
       console.log("RVU removed. Updated CSVObjects:", updatedCSVObjects);
       setCurrentRVU(null)
       showSuccessMessage(oldRVU.toString() + ' removed successfully.');
+      if (!touched) setTouched(true);
     } catch (error) { showErrorMessage('Error removing ' + oldRVU.toString() + '. Please try again.', error) }
   }
 
@@ -264,7 +269,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects}) => {
           {/* <Divider orientation="horizontal" flexItem /> */}
           <div className="totals">
             <span>
-              <Chip className="button" icon={<SaveIcon />} label="Save" variant="outlined" onClick={saveCSV} />
+              <Chip id="save-button" className={"button " + (touched ? 'tilt-n-move-shaking' : '')} icon={<SaveIcon />} label="Save" variant="outlined" onClick={saveCSV} />
               <input type="file" accept=".csv" style={{ display: "none" }} id="csv-import-input" onChange={importCSV}/>
               <Chip className="button" icon={<FileDownloadIcon />} label="Import" variant="outlined" onClick={clickImport} />
               <Chip className="button" icon={<FileUploadIcon />} label="Export" variant="outlined" onClick={exportCSV} />

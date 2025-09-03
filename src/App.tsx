@@ -8,7 +8,7 @@ import { sortRowsByDate } from './helper-functions/sort.ts'
 function App() {
   const [CSVData, setCSVData] = useState<string>('');
   const [CSVObjects, setCSVObjects] = useState<any[]>([]);
-
+  const [touched, setTouched] = useState(false); // Track if there are unsaved changes
 /*
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
 TODO: Fix bug where adding an RVU with the same date and description creates a double entry instead of incrementing quantity
@@ -72,9 +72,9 @@ TODO: Add directions (reminding user to save progress & use Chromium browsers) a
   return (
     <>
       <h1 className="title">RVU Tracker</h1>
-      <AddForm CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} updateCSV={updateCSV}></AddForm>
+      <AddForm CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} updateCSV={updateCSV} touched={touched} setTouched={setTouched}></AddForm>
         {!CSVData && <Spinner />}
-        {CSVData && <RSVTable CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects}></RSVTable>}
+        {CSVData && <RSVTable CSVData={CSVData} setCSVData={setCSVData} CSVObjects={CSVObjects} setCSVObjects={setCSVObjects} touched={touched} setTouched={setTouched}></RSVTable>}
     </>
   )
 }

@@ -1,5 +1,17 @@
 @import "../../App";
 
+@keyframes tilt-n-move-shaking {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(1px, 1px) rotate(2.5deg); }
+  50% { transform: translate(0, 0) rotate(0eg); }
+  75% { transform: translate(-1px, 1px) rotate(-2.5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.tilt-n-move-shaking {
+  animation: tilt-n-move-shaking .5s infinite;
+}
+
 /* Table styles */
 .MuiTable-root {
   width: 100%;
@@ -128,6 +140,26 @@ input[type="number"] {
   }
   path {
     fill: $secondary-color;
+  }
+
+  &:hover, &:focus, &:active {
+    path {
+      fill: $accent-color;
+      box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+#save-button {
+  background-color: $secondary-color;
+  color: #fff;
+  path {
+    fill: #ffffff;
+  }
+
+  &:hover, &:focus, &:active {
+    background-color: $accent-color !important;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
   }
 }
 
