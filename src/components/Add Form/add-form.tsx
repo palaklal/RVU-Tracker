@@ -66,46 +66,61 @@ const AddForm = ({CSVData, setCSVData, CSVObjects, setCSVObjects, updateCSV, tou
         setFormStatus({text: (`Adding ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `...`), type: 'loading'});
         try {
             let rows: any[] = [];
-            selectedCPTs.forEach((cpt: RVU) => {
-                // Prepare CSV row: ID, Date, CPT Code, Description, wRVU, Compensation, Category, Quantity
-                const row = [
-                    cpt.id,
-                    date.format('YYYY-MM-DD'),
-                    cpt['CPT Code'],
-                    cpt.Description,
-                    cpt.wRVU,
-                    cpt.Compensation,
-                    cpt.Category,
-                    (cpt.Quantity || 1) // Default to 1 if Quantity is not provided
-                ];
-                rows.push(row);
+            let virtualSelectedCPTs: RVU[] = [...selectedCPTs]; // create a copy to avoid mutating the state of the DISPLAYED CPTS when incrementing quantity of existing CPTs in CSVObjects
+            // console.log("Adding selected CPTs", selectedCPTs);
+            virtualSelectedCPTs.forEach((cpt: RVU) => {
+                // if CPT already exists in CSVObjects with same date and description, increment quantity instead of adding new row
+                const existingCPT = CSVObjects.find((obj: RVU) => obj.Date === cpt.Date && obj.Description === cpt.Description)
+                console.log("Checking if CPT already exists in CSVObjects", cpt.Description, "on", cpt.Date, existingCPT ? "Found existing CPT" : "No existing CPT found");
+                if (existingCPT) {
+                    existingCPT.Quantity += cpt.Quantity;
+                    setCSVObjects([...CSVObjects.filter((obj: RVU) => obj.id !== existingCPT.id), existingCPT]);
+                    virtualSelectedCPTs.splice(virtualSelectedCPTs.indexOf(cpt), 1); // remove from virtualSelectedCPTs since quantity is updated in CSVObjects
+                    console.log("Incremented existing CPT Quantity in CSVObjects", existingCPT.Description, "to", existingCPT.Quantity);
+                } else {
+                    // Prepare CSV row: ID, Date, CPT Code, Description, wRVU, Compensation, Category, Quantity
+                    const row = [
+                        cpt.id,
+                        date.format('YYYY-MM-DD'),
+                        cpt['CPT Code'],
+                        cpt.Description,
+                        cpt.wRVU,
+                        cpt.Compensation,
+                        cpt.Category,
+                        (cpt.Quantity || 1) // Default to 1 if Quantity is not provided
+                    ];
+                    rows.push(row);
+                }
             });
-            let CSVContent
-            if (CSVData && CSVData.length > 0) {
-                // Combine existing CSV data and new rows, then sort by date ascending
-                const existingRows = CSVData
-                    .split('\n')
-                    .filter(Boolean) // Remove empty lines
-                    .slice(1) // skip header
-                    .map((line: string) => line.split(','));
-                let allRows = [...existingRows, ...rows];
-                allRows = sortRowsByDate(allRows);
-                CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Categor,Quantityy\n` + allRows.map(row => row.join(',')).join('\n');
-                console.log("CSVContent", CSVContent)
-            } else {
-                // If no existing data, just use the new rows
-                CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n`
-                + rows.map(row => row.join(',')).join('\n');
+            
+            if (rows.length > 0) {
+                let CSVContent
+                if (CSVData && CSVData.length > 0) {
+                    // Combine existing CSV data and new rows, then sort by date ascending
+                    const existingRows = CSVData
+                        .split('\n')
+                        .filter(Boolean) // Remove empty lines
+                        .slice(1) // skip header
+                        .map((line: string) => line.split(','));
+                    let allRows = [...existingRows, ...rows];
+                    allRows = sortRowsByDate(allRows);
+                    CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Categor,Quantityy\n` + allRows.map(row => row.join(',')).join('\n');
+                    console.log("CSVContent", CSVContent)
+                } else {
+                    // If no existing data, just use the new rows
+                    CSVContent = `ID,Date,CPT Code,Description,wRVU,Compensation,Category,Quantity\n`
+                    + rows.map(row => row.join(',')).join('\n');
+                }
+                setCSVData(CSVContent);
             }
             
-            setCSVData(CSVContent);
             if (CSVObjects && CSVObjects.length > 0) {
-                let newCSVObjects = [...CSVObjects, ...selectedCPTs];
+                let newCSVObjects = [...CSVObjects, ...virtualSelectedCPTs];
                 newCSVObjects = sortObjectsByDate(newCSVObjects);
                 updateCSV(newCSVObjects);
                 console.log("New CSVObjects", newCSVObjects);  
             }
-            else updateCSV(selectedCPTs)
+            else updateCSV(virtualSelectedCPTs)
             if (!touched) setTouched(true);
             setFormStatus({text: (`Added ${selectedCPTs.length} RVU` + (selectedCPTs.length > 1 ? 's' : '') + `! Resetting form...`), type: 'success'});
             setTimeout(() => {
