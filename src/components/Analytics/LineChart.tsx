@@ -11,7 +11,7 @@ export default function LineChart({ data, colorPalette, metadata }) {
         if (!data || data.length === 0) return;
 
         // set the dimensions and margins of the graph
-        const margin = {top: 100, right: 150, bottom: 50, left: 50},
+        const margin = {top: 100, right: 250, bottom: 50, left: 50},
             width = 800 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom
 
@@ -41,7 +41,8 @@ export default function LineChart({ data, colorPalette, metadata }) {
             .attr("font-size", 12)
             .attr("fill", "#006064")
             .text(metadata.xLabel);
-    // Add Y axis
+
+        // Add Y axis
         const y = d3.scaleLinear()
             .domain([0, d3.max(data, (d: LineChartData) => +d.value)])
             .range([ height, 0 ]);
@@ -57,6 +58,35 @@ export default function LineChart({ data, colorPalette, metadata }) {
             .attr("font-size", 12)
             .attr("fill", "#006064")
             .text(metadata.yLabel);
+
+        // Add individual data points
+        svg.append("g")
+            .selectAll("dot")
+            .data(data)
+            .enter()
+            .append("circle")
+                .attr("cx", (d: LineChartData) => x(d.date) )
+                .attr("cy", (d: LineChartData) => y(d.value) )
+                .attr("r", 3)
+                .attr("fill", colorPalette[0])
+        //add tooltip on hover
+            .on("mouseover", (event: MouseEvent, d: LineChartData) => {
+                const tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("position", "absolute")
+                    .style("background", "#003d45")
+                    .style("padding", "5px")
+                    .style("border", "1px solid #d4d4d4")
+                    .style("border-radius", "5px")
+                    .style("pointer-events", "none")
+                    .style("font-size", "10px")
+                    .html(`<strong>Date:</strong> ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/><strong>Total Compensation:</strong> $${d.value.toFixed(2)}`);
+                tooltip.style("left", (event.pageX + 10) + "px")
+                       .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", () => {
+                d3.selectAll(".tooltip").remove();
+            });
 
         // Add the line
         svg.append("path")

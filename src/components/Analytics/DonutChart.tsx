@@ -52,11 +52,14 @@ export default function DonutChart({ data, colorPalette, metadata }) {
             .attr('stroke', 'white')
             .attr('stroke-width', 2);
 
-        // Add labels
-        svg.selectAll('text')
+        // Add labels only for slices with angle > threshold
+        const labelAngleThreshold = 0.45; // radians (~8.6 degrees)
+        svg.selectAll('text.category')
             .data(pie(data))
             .enter()
             .append('text')
+            .filter(d => d.endAngle - d.startAngle > labelAngleThreshold)
+            .attr('class', 'category')
             .attr('transform', d => `translate(${arc.centroid(d)})`)
             .attr('text-anchor', 'middle')
             .attr('font-size', 11)
@@ -67,25 +70,78 @@ export default function DonutChart({ data, colorPalette, metadata }) {
             .data(pie(data))
             .enter()
             .append('text')
+            .filter(d => d.endAngle - d.startAngle > labelAngleThreshold)
+            .attr('class', 'value')
             .attr('transform', d => `translate(${arc.centroid(d)})`)
             .attr('text-anchor', 'middle')
             .attr('font-size', 11)
             .attr('fill', '#fff')
             .attr('dy', '0.8em')
             .text(d => `$${d.data.count.toFixed(2)}`);
-        
-        // Add box shadow to the SVG
-        d3.select(chartRef.current).select('svg')
-            .style('filter', 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))');
-        // Add title
-        svg.append('text')
-            .attr('x', 0)
-            .attr('y', -height / 2 + 20)
-            .attr('text-anchor', 'middle')
-            .attr('font-size', 16)
-            .attr('font-weight', 'bold')
-            .attr('fill', '#003d45')
-            .text(metadata.title);
+
+        // move slice on hover and show tooltip
+        const tooltip = d3.select(chartRef.current)
+            .append('div')
+            .style('position', 'absolute')
+            .style("background", "#003d45")
+            .style("padding", "5px")
+            .style("border", "1px solid #d4d4d4")
+            .style("border-radius", "5px")
+            .style("pointer-events", "none")
+            .style("font-size", "10px")
+            .style('color', 'white')
+            .style('box-shadow', '0 2px 8px rgba(0,0,0,0.2)')
+            .style('opacity', 0);
+
+        svg.selectAll('path')
+            .on('mouseover', function(event: MouseEvent, d: d3.PieArcDatum<DonutChartData>) {
+            const sliceColor = color(d.data.category);
+            d3.select(this)
+                .transition()
+                .duration(200)
+                .attr('transform', function(d: d3.PieArcDatum<DonutChartData>) {            
+                const dist = 15;
+                const midAngle = (d.startAngle + d.endAngle) / 2;
+                const x = Math.sin(midAngle) * dist;
+                const y = -Math.cos(midAngle) * dist;
+                return `translate(${x},${y})`;
+                });
+
+            tooltip
+                .style('opacity', 1)
+                .style('background', sliceColor)
+                .html(`<strong>${d.data.category}</strong><br/>$${d.data.count.toFixed(2)}`)
+                .style('left', `${event.clientX - 100}px`)
+                .style('top', `${event.clientY}px`);
+            })
+            .on('mousemove', function(event: MouseEvent, d: d3.PieArcDatum<DonutChartData>) {
+            const sliceColor = color(d.data.category);
+            tooltip
+                .style('left', `${event.clientX - 100}px`)
+                .style('top', `${event.clientY}px`)
+                .style('background', sliceColor);
+            })
+            .on('mouseout', function() {
+            d3.select(this)
+                .transition()
+                .duration(200)
+                .attr('transform', 'translate(0,0)');
+            tooltip.style('opacity', 0);
+            });
+            
+            
+            // Add box shadow to the SVG
+            d3.select(chartRef.current).select('svg')
+                .style('filter', 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))');
+            // Add title
+            svg.append('text')
+                .attr('x', 0)
+                .attr('y', -height / 2 + 20)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', 16)
+                .attr('font-weight', 'bold')
+                .attr('fill', '#003d45')
+                .text(metadata.title);
     }, [data]);
     return (
         <div ref={chartRef}></div>
