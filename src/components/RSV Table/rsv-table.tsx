@@ -140,6 +140,16 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
     if (!touched) setTouched(true);
   }
 
+  const getMonthlyAverage = (): string => {
+    const totalCompensation = CSVObjects.reduce((acc: number, cpt: RVU) => acc + cpt.Compensation * (cpt.Quantity || 1), 0);
+    const dates: Date[] = CSVObjects.map((cpt: RVU) => new Date(cpt.Date as string));
+    const minDate = new Date(Math.min(...dates.map(date => date.getTime())));
+    const maxDate = new Date(Math.max(...dates.map(date => date.getTime())));
+    const months = (maxDate.getFullYear() - minDate.getFullYear()) * 12 + (maxDate.getMonth() - minDate.getMonth()) + 1; // +1 to include the current month
+    const average = totalCompensation / months;
+    return `Average Monthly Compensation: $` + average.toFixed(2);
+  }
+
   const updateQuantity = (id: string | number, value: string | number) => {
     const newQuantity = typeof value === 'string' ? parseInt(value) : value;
     // console.log("Updating quantity for RVU with ID:", id, "to", newQuantity);
@@ -344,9 +354,10 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
               <Chip className="button" icon={<FileUploadIcon />} label="Export" variant="outlined" onClick={exportCSV} />
               <Chip className="button" icon={<DeleteForeverIcon />} label="Clear" variant="outlined" onClick={setClearModalToTrue} />
             </span>
-            <span>
+            { CSVObjects.length > 0 && <span>
               <Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc: number, cpt: RVU) => acc + cpt.Compensation * (cpt.Quantity || 1), 0).toFixed(2)} variant="outlined" />
-            </span>
+              <Chip className="info" label={ getMonthlyAverage() } variant="outlined" />
+            </span> }
           </div>
           { error && <Alert variant="filled" severity="error" onClose={() => { setError(null)}}>{error}</Alert> }
           { success && <Alert variant="filled" severity="success" onClose={() => { setSuccess(null)}}>{success}</Alert> }

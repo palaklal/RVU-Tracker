@@ -20,11 +20,14 @@ function App() {
 /*
 TODO: Add tests
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break
+TODO: Make clear which filter is active
+TODO: Update Monthly Average and Total Compensation to use useMemo for optimization (and better styling for key vs value)
+TODO: Add clear button for Search Bar/Filter and fix current bug where hiding and showing the Search Bar will remove the text but keep the filter active
+
 TODO: Add color labels for categories in table and customizable categories, CPTs, etc.
 TODO: Add calendar view for RVUs
 TODO: Add pagination to table (and maybe use Material's UI DataGrid, sorting, filtering, etc.)
-TODO: Add tooltips
-TODO: Add directions (reminding user to save progress & use Chromium browsers) at top
+TODO: Add tooltips and directions (reminding user to save progress & use Chromium browsers) at top
 TODO: Move Total Compensation to end/next to Quantity to make it clear that it's wRVU * Compensation * Quantity (including moving Compensation in CSV file)
 ?Add menu on side of website to Add CPT codes (this), summarize, display CSV in table (including import and export). Each page will have a different background image.
 */
