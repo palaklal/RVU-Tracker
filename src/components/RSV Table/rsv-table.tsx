@@ -200,24 +200,28 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
       const cptDate = new Date((cpt.Date as string));
       const afterFrom = from ? cptDate >= from.subtract(1, 'day').toDate() : true;
       const beforeTo = to ? cptDate <= to.toDate() : true;
-      setError(null);
       return afterFrom && beforeTo;
     });
     if (filtered.length === 0) showErrorMessage('No RVUs found in the selected date range. Please try a different range.');
     else setCSVObjects(filtered);
   };
 
-  const filterFromDate = (date: Dayjs | null) => {
+  const filterFromDate = (date: Dayjs | null, DOM?: boolean) => { // DOM indicates if user selected from the DOM input
+    setError(null)
+    if (DOM) setDisplayRange('Custom')  // clear Preselected Date Range toggle from 'All'
     setFromDate(date);
     filterByDateRange(date, toDate);
   };
 
-  const filterToDate = (date: Dayjs | null) => {
+  const filterToDate = (date: Dayjs | null, DOM?: boolean) => {
+    setError(null)
+    if (DOM) setDisplayRange('Custom') // clear Preselected Date Range toggle from 'All'
     setToDate(date);
     filterByDateRange(fromDate, date);
   };
 
   const updateDisplayRange = (event: React.MouseEvent<HTMLElement>, newRange: string) => {
+    setError(null);
     setDisplayRange(newRange);
     const now = new Date();
     let from: Dayjs | null = null;
@@ -225,8 +229,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
     if (newRange === '') {
       from = to = null;
       setError(null)
-    }
-    else if (newRange === 'Today') {
+    } else if (newRange === 'Today') {
       from = to = dayjs(now);
     } else if (newRange === 'This Month') {
       from = dayjs(new Date(now.getFullYear(), now.getMonth(), 1));
@@ -350,11 +353,11 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
           <div className="date-container">
             <span>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker slotProps={{ field: { clearable: true, onClear: () => setFromDate(null) }}} className="date" label="From" value={fromDate} onChange={(e) => filterFromDate(e)} />
+                  <DatePicker slotProps={{ field: { clearable: true, onClear: () => setFromDate(null) }}} className="date" label="From" value={fromDate} onChange={(e) => filterFromDate(e, true)} />
               </LocalizationProvider>
               -
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker slotProps={{ field: { clearable: true, onClear: () => setToDate(null) }}} className="date" label="To" value={toDate} onChange={(e) => filterToDate(e)} />
+                  <DatePicker slotProps={{ field: { clearable: true, onClear: () => setToDate(null) }}} className="date" label="To" value={toDate} onChange={(e) => filterToDate(e, true)} />
               </LocalizationProvider>
             </span>
             <ToggleButtonGroup
