@@ -5,6 +5,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Alert from '@mui/material/Alert';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -13,8 +17,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SaveIcon from '@mui/icons-material/Save';
-import InsightsIconOutlined from '@mui/icons-material/Insights';
-import AddIconOutlined from '@mui/icons-material/Add';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
@@ -24,7 +26,7 @@ import '../../App.scss'
 import './rsv-table.scss'
 import { RVU } from "../../types/RVU";
 
-const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setTouched, show, setShow }) => {
+const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setTouched }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -122,7 +124,7 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
     }
   }
 
-  const [clearModal, setClearModal] = useState(false);
+  const [clearModal, setClearModal] = useState<boolean>(false);
   const setClearModalToTrue = () => {
     console.log("Opening clear table modal")
     setClearModal(true)
@@ -136,10 +138,6 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
     setCSVData(initialCSV);
     setCSVObjects([]);
     if (!touched) setTouched(true);
-  }
-
-  const updateShow = (event: React.MouseEvent<HTMLElement>, newShow: string) => {
-    setShow(newShow);
   }
 
   const updateQuantity = (id: string | number, value: string | number) => {
@@ -165,13 +163,88 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
     console.log("Updated quantity for RVU with ID:", id, "to", newQuantity);
   }
 
-  const [removeModal, setRemoveModal] = useState(false);
+  const [removeModal, setRemoveModal] = useState<boolean>(false);
   const [currentRVU, setCurrentRVU] = useState<RVU | null>(null);
-  const [showSearch, setShowSearch] = useState(false);
+  const [fromDate, setFromDate] = useState<Dayjs | null>(null);
+  const [displayRange, setDisplayRange] = useState<string>('');
+  const [toDate, setToDate] = useState<Dayjs | null>(null);
+  const [showSearch, setShowSearch] = useState<boolean>(false);
 
   const toggleSearch = (value: boolean) => () => {
     setShowSearch(value)
   }
+
+  // Helper to parse CSVData into objects / Reset all data by re-parsing CSVData
+  const parseCSVObjects = () => {
+    const rows = CSVData.split('\n').slice(1).map((row: any) => row.split(','));
+    return rows.map((row: any) => ({
+      id: row[0],
+      Date: row[1],
+      "CPT Code": row[2],
+      Description: row[3],
+      wRVU: parseFloat(row[4]),
+      Compensation: parseFloat(row[5]),
+      Category: row[6],
+      Quantity: parseInt(row[7]) || 1
+    }));
+  };
+
+  // Helper to filter by date range
+  const filterByDateRange = (from: Dayjs | null, to: Dayjs | null) => {
+    const objects = parseCSVObjects();
+    if (!from && !to) {
+      setCSVObjects(objects);
+      return;
+    }
+    const filtered = objects.filter((cpt: RVU) => {
+      const cptDate = new Date((cpt.Date as string));
+      const afterFrom = from ? cptDate >= from.subtract(1, 'day').toDate() : true;
+      const beforeTo = to ? cptDate <= to.toDate() : true;
+      setError(null);
+      return afterFrom && beforeTo;
+    });
+    if (filtered.length === 0) showErrorMessage('No RVUs found in the selected date range. Please try a different range.');
+    else setCSVObjects(filtered);
+  };
+
+  const filterFromDate = (date: Dayjs | null) => {
+    setFromDate(date);
+    filterByDateRange(date, toDate);
+  };
+
+  const filterToDate = (date: Dayjs | null) => {
+    setToDate(date);
+    filterByDateRange(fromDate, date);
+  };
+
+  const updateDisplayRange = (event: React.MouseEvent<HTMLElement>, newRange: string) => {
+    setDisplayRange(newRange);
+    const now = new Date();
+    let from: Dayjs | null = null;
+    let to: Dayjs | null = null;
+    if (newRange === '') {
+      from = to = null;
+      setError(null)
+    }
+    else if (newRange === 'Today') {
+      from = to = dayjs(now);
+    } else if (newRange === 'This Month') {
+      from = dayjs(new Date(now.getFullYear(), now.getMonth(), 1));
+      to = dayjs(new Date(now.getFullYear(), now.getMonth() + 1, 0));
+    } else if (newRange === 'Past Month') {
+      from = dayjs(now).subtract(1, 'month')
+      to = dayjs(now);
+    } else if (newRange === 'This Year') {
+      from = dayjs(new Date(now.getFullYear(), 0, 1));
+      to = dayjs(new Date(now.getFullYear(), 12, 31));
+    } else if (newRange === 'Past Year') {
+      from = dayjs(now).subtract(1, 'year')
+      to = dayjs(now);
+    }
+    setFromDate(from);
+    setToDate(to);
+    filterByDateRange(from, to);
+  };
 
   const handleOpenRemoveModal = (cpt: RVU) => () => {
     cpt = new RVU(cpt.id, cpt.Date, cpt["CPT Code"], cpt.Description, cpt.wRVU, cpt.Compensation, cpt.Category, cpt.Quantity)
@@ -248,25 +321,10 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
     const filtered = CSVObjects.filter((cpt: any) =>
       Object.values(cpt).some(val =>
         String(val).toLowerCase().includes(search)
-      )
-    );
+    ));
     if (search) {
       setCSVObjects(filtered);
-    } else {
-      // Reset to all data by re-parsing CSVData
-      const rows = CSVData.split('\n').slice(1).map(row => row.split(','));
-      const objects = rows.map((row) => ({
-        id: row[0],
-        Date: row[1],
-        "CPT Code": row[2],
-        Description: row[3],
-        wRVU: parseFloat(row[4]),
-        Compensation: parseFloat(row[5]),
-        Category: row[6],
-        Quantity: parseInt(row[7]) || 1
-      }));
-      setCSVObjects(objects);
-    }
+    } else parseCSVObjects()
   }
 
   if (!CSVData || !CSVObjects || CSVObjects.length === 0) {
@@ -283,32 +341,53 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
               <Chip className="button" icon={<FileUploadIcon />} label="Export" variant="outlined" onClick={exportCSV} />
               <Chip className="button" icon={<DeleteForeverIcon />} label="Clear" variant="outlined" onClick={setClearModalToTrue} />
             </span>
-            <span style={{ marginRight: "7.5rem" }}>
-              <ToggleButtonGroup
-                color="primary"
-                value={show}
-                exclusive
-                onChange={updateShow}
-                aria-label="Show Add Form or Analytics"
-              >
-                <ToggleButton className={"button " + (show === 'AddForm' ? 'active-show' : '')} value="AddForm" aria-label="Show Add Form">
-                  <AddIconOutlined />Add
-                </ToggleButton>
-                <ToggleButton className={"button " + (show === 'Analytics' ? 'active-show' : '')} value="Analytics" aria-label="Show Analytics">
-                  <InsightsIconOutlined /> Analytics
-                </ToggleButton>              
-              </ToggleButtonGroup>
-            </span>
             <span>
               <Chip className="info" label={ `Total Compensation: $` + CSVObjects.reduce((acc: number, cpt: RVU) => acc + cpt.Compensation * (cpt.Quantity || 1), 0).toFixed(2)} variant="outlined" />
             </span>
           </div>
           { error && <Alert variant="filled" severity="error" onClose={() => { setError(null)}}>{error}</Alert> }
           { success && <Alert variant="filled" severity="success" onClose={() => { setSuccess(null)}}>{success}</Alert> }
+          <div className="date-container">
+            <span>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker slotProps={{ field: { clearable: true, onClear: () => setFromDate(null) }}} className="date" label="From" value={fromDate} onChange={(e) => filterFromDate(e)} />
+              </LocalizationProvider>
+              -
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker slotProps={{ field: { clearable: true, onClear: () => setToDate(null) }}} className="date" label="To" value={toDate} onChange={(e) => filterToDate(e)} />
+              </LocalizationProvider>
+            </span>
+            <ToggleButtonGroup
+                color="primary"
+                value={displayRange}
+                exclusive
+                onChange={updateDisplayRange}
+                aria-label="Show Preselected Date Range"
+              >
+                <ToggleButton className={"button " + (displayRange === '' ? 'active-show' : '')} value="" aria-label="All">
+                 All
+                </ToggleButton>
+                <ToggleButton className={"button " + (displayRange === 'Today' ? 'active-show' : '')} value="Today" aria-label="Today">
+                 Today
+                </ToggleButton>
+                <ToggleButton className={"button " + (displayRange === 'This Month' ? 'active-show' : '')} value="This Month" aria-label="This Month">
+                  This Month
+                </ToggleButton>
+                <ToggleButton className={"button " + (displayRange === 'Past Month' ? 'active-show' : '')} value="Past Month" aria-label="Past Month">
+                  Past Month
+                </ToggleButton>
+                <ToggleButton className={"button " + (displayRange === 'This Year' ? 'active-show' : '')} value="This Year" aria-label="This Year">
+                  This Year
+                </ToggleButton>
+                <ToggleButton className={"button " + (displayRange === 'Past Year' ? 'active-show' : '')} value="Past Year" aria-label="Past Year">
+                  Past Year
+                </ToggleButton>              
+              </ToggleButtonGroup>
+          </div>
         <Table stickyHeader={true} className="cpt-table">
           <thead>
             <tr>
-              <th>
+              <th colSpan={1}>
                 <span className="th-container">
                   { !showSearch && <SearchIcon className="searchToggle" title="Show Search Bar" onClick={toggleSearch(true)} /> }
                   { showSearch && <SearchOffIcon className="searchToggle" title="Hide Search Bar" onClick={toggleSearch(false)} /> }
@@ -374,7 +453,8 @@ const RSVTable = ({CSVData, setCSVData, CSVObjects, setCSVObjects, touched, setT
               </th>
               <th></th>
             </tr>
-            { showSearch && <tr>
+            { showSearch && 
+            <tr>
               <th colSpan={7}>
                 <input
                   type="text"

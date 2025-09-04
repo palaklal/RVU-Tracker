@@ -12,6 +12,32 @@
   animation: tilt-n-move-shaking .5s infinite;
 }
 
+.date-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 32px;
+    margin-top: 15px;
+    color: $secondary-color;
+
+    .MuiFormControl-root {
+      height: 32px;
+      margin: 0 5px;
+
+      .MuiPickersInputBase-root {
+        height: 32px;
+      }
+
+      .MuiFormLabel-root {
+          top: -10px;
+          &.MuiInputLabel-shrink {
+            top: 0px;
+          }
+      }
+    }
+  }
+
 /* Table styles */
 .MuiTable-root {
   width: 100%;
