@@ -19,7 +19,7 @@ const Analytics = ({ CSVObjects, setCSVObjects }) => {
             "#f57c00", // orange
             "#c62828", // red
         ];
-    const categoryMetaData: any = { title: "Compensation Over Time" };
+    const categoryMetaData: any = { title: "Compensation by Category" };
     const [categoryData, setCategoryData] = useState<any[]>([]);
     const RVUsOverTimeMetadata: any = { title: "Compensation Over Time", yLabel: "Compensation ($)", xLabel: "Date" };
     const [RVUsOverTimeData, setRVUsOverTimeData] = useState<any[]>([]);
