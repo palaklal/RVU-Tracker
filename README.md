@@ -12,4 +12,4 @@ Currently supports:
 </ul>
 
 ![RVU Tracker with Add Form](./src/assets/screenshots/Screenshot%2010.png)
-![RVU Tracker with Analytics](./src/assets/screenshots/Screenshot%2011.png)
+![RVU Tracker with Analytics](./src/assets/screenshots/Screenshot%2012.png)
