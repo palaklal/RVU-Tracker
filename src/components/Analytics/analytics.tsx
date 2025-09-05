@@ -1,5 +1,6 @@
 import DonutChart from './DonutChart.tsx'
-import LineChart from './LineChart.tsx'
+// import LineChart from './LineChart.tsx'
+import BarChart from './BarChart.tsx'
 
 import '../../App.scss'
 import './analytics.scss'
@@ -23,7 +24,6 @@ const Analytics = ({ CSVObjects, setCSVObjects }) => {
     const [categoryData, setCategoryData] = useState<any[]>([]);
     const RVUsOverTimeMetadata: any = { title: "Compensation Over Time", yLabel: "Compensation ($)", xLabel: "Date" };
     const [RVUsOverTimeData, setRVUsOverTimeData] = useState<any[]>([]);
-    
 
     useEffect(() => {
         if (!CSVObjects || CSVObjects.length === 0) {
@@ -33,10 +33,10 @@ const Analytics = ({ CSVObjects, setCSVObjects }) => {
         }
 
         setLineChartData()
-        setDonutChartData()
+        processDonutChartData()
     }, [CSVObjects]);
 
-    const setDonutChartData = () => {
+    const processDonutChartData = () => {
         // Count occurrences of each category
         const categoryCounts = CSVObjects.reduce((acc, row) => {
             const category = row.Category || 'Unknown';
@@ -73,7 +73,7 @@ const Analytics = ({ CSVObjects, setCSVObjects }) => {
     return (
         <div className="analytics-container">
             { categoryData.length > 0 && <DonutChart data={categoryData} colorPalette={colorPalette} metadata={categoryMetaData} />}
-            { RVUsOverTimeData.length > 0 && <LineChart data={RVUsOverTimeData} colorPalette={colorPalette} metadata={RVUsOverTimeMetadata} />}
+            { RVUsOverTimeData.length > 0 && <BarChart data={CSVObjects} colorPalette={colorPalette} metadata={RVUsOverTimeMetadata} />}
         </div>
     )
 }

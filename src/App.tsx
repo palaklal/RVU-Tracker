@@ -16,7 +16,7 @@ function App() {
   const [CSVData, setCSVData] = useState<string>('');
   const [CSVObjects, setCSVObjects] = useState<any[]>([]);
   const [touched, setTouched] = useState<boolean>(false); // Track if there are unsaved changes
-  const [show, setShow] = useState<'AddForm' | 'Analytics'>('AddForm');
+  const [show, setShow] = useState<'AddForm' | 'Analytics'>('Analytics');
 /*
 TODO: Add tests
 TODO: Need to fix bug where "," in RVU's description causes the CSV to break

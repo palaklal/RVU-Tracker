@@ -8,7 +8,7 @@ export default function DonutChart({ data, colorPalette, metadata }) {
     const chartRef = useRef<HTMLDivElement>(null);
     
     useEffect(() => {
-        console.log("DonutChart data:", data);
+        // console.log("DonutChart data:", data);
         if (!data || data.length === 0) return;
     
         // Chart dimensions
